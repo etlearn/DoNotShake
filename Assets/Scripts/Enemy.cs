@@ -144,6 +144,7 @@ public class Enemy:Actor {
 	
 	public void PlayAmbientOverlayAnimation(string animName, float speed, float weight) {
 		AnimationState state = anim[animName];
+		if (state == null) return;
 		state.weight = weight;
 		state.wrapMode = WrapMode.Once;
 		state.layer = 5;

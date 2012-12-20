@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: afc6aecbdc8c1e94c898e0786bf335d1
+guid: d28afb587e5a29d4cbff0524ae9cae3f
 ModelImporter:
   fileIDToRecycleName:
-    4300000: ch_BlkB
-    7400000: Take 001 //// ch_BlkB
-    7400002: idle //// ch_BlkB
-    7400004: walk //// ch_BlkB
-    7400006: jump //// ch_BlkB
+    4300000: ch_StarR
+    7400000: Take 001 //// ch_StarR
+    7400002: idle //// ch_StarR
+    7400004: idle0 //// ch_StarR
+    7400006: walk //// ch_StarR
   serializedVersion: 10
   materials:
     importMaterials: 0
@@ -24,17 +24,12 @@ ModelImporter:
     clipAnimations:
     - name: idle
       firstFrame: 0
-      lastFrame: 39
+      lastFrame: 79
       wrapMode: 2
       loop: 1
     - name: walk
       firstFrame: 0
-      lastFrame: 39
-      wrapMode: 2
-      loop: 1
-    - name: jump
-      firstFrame: 41
-      lastFrame: 55
+      lastFrame: 1
       wrapMode: 0
       loop: 0
   meshes:
@@ -59,42 +54,14 @@ ModelImporter:
     //RootNode:
       data:
         first: 1
-        second: a4860100
+        second: b2860100
       data:
         first: 4
-        second: 841a0600
+        second: 921a0600
       data:
         first: 111
         second: 605fa900
-    ch_BlkB:
-      data:
-        first: 1
-        second: a2860100
-      data:
-        first: 4
-        second: 821a0600
-    rig_BlkB_eyes:
-      data:
-        first: 1
-        second: a0860100
-      data:
-        first: 4
-        second: 801a0600
-    rig_BlkB_heel_L:
-      data:
-        first: 1
-        second: a6860100
-      data:
-        first: 4
-        second: 861a0600
-    rig_BlkB_heel_R:
-      data:
-        first: 1
-        second: ac860100
-      data:
-        first: 4
-        second: 8c1a0600
-    rig_BlkB_root:
+    ch_StarR:
       data:
         first: 1
         second: aa860100
@@ -104,17 +71,59 @@ ModelImporter:
       data:
         first: 137
         second: a00bd100
-    rig_BlkB_toe_L:
-      data:
-        first: 1
-        second: a8860100
-      data:
-        first: 4
-        second: 881a0600
-    rig_BlkB_toe_R:
+    rig_StarR_bodyBone:
       data:
         first: 1
         second: ae860100
       data:
         first: 4
         second: 8e1a0600
+    rig_StarR_longEyeL:
+      data:
+        first: 1
+        second: a0860100
+      data:
+        first: 4
+        second: 801a0600
+    rig_StarR_longEyeR:
+      data:
+        first: 1
+        second: a4860100
+      data:
+        first: 4
+        second: 841a0600
+    rig_StarR_rootBox:
+      data:
+        first: 1
+        second: b0860100
+      data:
+        first: 4
+        second: 901a0600
+    rig_StarR_roundEyeL:
+      data:
+        first: 1
+        second: a2860100
+      data:
+        first: 4
+        second: 821a0600
+    rig_StarR_roundEyeR:
+      data:
+        first: 1
+        second: a8860100
+      data:
+        first: 4
+        second: 881a0600
+    rig_StarR_topBone:
+      data:
+        first: 1
+        second: ac860100
+      data:
+        first: 4
+        second: 8c1a0600
+    rig_StarR_wingTipBox:
+      data:
+        first: 1
+        second: a6860100
+      data:
+        first: 4
+        second: 861a0600
