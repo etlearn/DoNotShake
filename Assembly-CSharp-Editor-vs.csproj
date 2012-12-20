@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{96431FD9-7C00-F524-7BC6-D328C37B4DEC}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_3_5_6;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_STANDALONE_WIN;ENABLE_GENERICS;ENABLE_DUCK_TYPING;ENABLE_TERRAIN;ENABLE_MOVIES;ENABLE_WEBCAM;ENABLE_MICROPHONE;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW;ENABLE_SUBSTANCE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="UnityEngine">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\InspectorUndo\Editor\HOEXInspectorUndoEditor.cs" />
+     <Compile Include="Assets\SpriteEngine\Editor\Sprite_Editor.cs" />
+     <Compile Include="Assets\UnIDE\Editor\EditorCore\UIDEAssetModProcessor.cs" />
+     <Compile Include="Assets\UnIDE\Editor\EditorCore\UIDEAssetPostProcessor.cs" />
+     <Compile Include="Assets\UnIDE\Editor\EditorCore\UIDEEditorWindow.cs" />
+     <Compile Include="Assets\UnIDE\Editor\EditorCore\UIDEGrammarTester.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Plugins\AutoComplete\AutoComplete.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Plugins\ErrorTracking\ErrorTracking.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Plugins\FindAndReplace\FindAndReplace.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Plugins\SyntaxRules\CSharp\CSKeywords.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Plugins\SyntaxRules\SyntaxRuleCSharpUnityscript.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Plugins\SyntaxRules\SyntaxRuleGeneric.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Plugins\SyntaxRules\Unityscript\USKeywords.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Plugins\UnityAPISearch\UnityAPISearch.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\APITokens.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\ClickBlocker.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\CompletionItem.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\ExpressionCompiler.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\ExpressionResolvers\CSharp\ExpressionResolver.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\ExpressionResolvers\ChainResolver.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\ExpressionResolvers\ReflectionDB.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\CSharp\Parser.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\CommonParser.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\AddOperator.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\BinaryOperator.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\Expression.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\NamedLiteral.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\UnaryOperator.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\ParserInterface.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Parsing.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Unityscript\USParser.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\RCMenu\RCMenu.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\RCMenu\RCMenuItem.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroup.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\General\SGGeneral.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\General\UIDESettingsGroupDataGeneral.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Plugins\SGPlugins.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Plugins\UIDESettingsGroupDataPlugins.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Text\SGText.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Text\UIDESettingsGroupDataText.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Theme\SGTheme.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Theme\UIDESettingsGroupDataTheme.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\UIDESettingsGroupData.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsMenu.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\SyntaxRule.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\Theme.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEClipboardHelper.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDECursor.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEDoc.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEEditor.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEElement.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEFuzzySearch.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEGUI.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDELine.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDELogEntry.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEPlugin.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEScopeTree.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDESelection.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDETokenDef.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDETokenDefs.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEUndo.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEUndoManager.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEWindow.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\Windows\UIDEProjectView.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Scripts\Windows\UIDETextEditor.cs" />
+     <Compile Include="Assets\UnIDE\Editor\Themes\SlateDark\ThemeSlateDark.cs" />
+     <Compile Include="Assets\UnIDE\Editor\UIDEHashTable\UIDEHashItem.cs" />
+     <Compile Include="Assets\UnIDE\Editor\UIDEHashTable\UIDEHashTable.cs" />
+     <None Include="Assets\SpriteEngine\Sprite_AlphaBlend.shader" />
+     <None Include="Assets\Shaders\DoubleSidedSprite.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-vs.csproj">
+      <Project>{D5F6B214-039E-1E92-9DA3-204A063CB589}</Project>      <Name>Assembly-CSharp-vs</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
