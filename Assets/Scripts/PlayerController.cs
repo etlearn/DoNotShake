@@ -79,6 +79,9 @@ public class PlayerController:Actor {
 				
 			}
 		}
+		if (character.isGrounded) {
+			PlayAnimation("idle",1);
+		}
 	}
 	
 	public void ShakeJump(float power) {
@@ -108,6 +111,7 @@ public class PlayerController:Actor {
 		Vector3 newVel = rigidbody.velocity;
 		newVel.y += power;
 		rigidbody.velocity = newVel;
+		PlayAnimation("jump",1);
 		//rigidbody.AddForce(Vector3.up*power*1000.0f,ForceMode.Impulse);
 	}
 	
