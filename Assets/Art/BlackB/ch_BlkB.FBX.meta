@@ -6,6 +6,7 @@ ModelImporter:
     7400000: Take 001 //// ch_BlkB
     7400002: idle //// ch_BlkB
     7400004: walk //// ch_BlkB
+    7400006: jump //// ch_BlkB
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -31,6 +32,11 @@ ModelImporter:
       lastFrame: 39
       wrapMode: 2
       loop: 1
+    - name: jump
+      firstFrame: 41
+      lastFrame: 55
+      wrapMode: 0
+      loop: 0
   meshes:
     lODScreenPercentages: []
     globalScale: .00999999978
