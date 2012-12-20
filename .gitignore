@@ -12,10 +12,8 @@ Desktop.ini
 .DS_Store
 
 # Ignore The following directories / file extensions
-Library/
-Temp/
-Library/*
-Assets/UnIDE
+Library
+Temp
 
 # Ignore the following file extensions
 *.exe
