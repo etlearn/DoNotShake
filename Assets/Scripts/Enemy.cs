@@ -91,15 +91,12 @@ public class Enemy:Actor {
 					
 					AnimationState explodeState = anim["explode"];
 					if (explodeState != null) {
-						//Debug.Log(gameObject+" "+startTime+" "+explodeAnimLength);
 						explodeState.layer = 10;
 						anim.Play(explodeState.name, PlayMode.StopSameLayer);
-						//explodeState.weight = explodeAnimationWeight;
+						explodeState.weight = explodeAnimationWeight;
+						explodeState.blendMode = AnimationBlendMode.Additive;
 						explodeState.wrapMode = WrapMode.ClampForever;
-						//explodeState.layer = 10;
-						//explodeState.blendMode = AnimationBlendMode.Additive;
 						explodeState.time = startTime;
-						explodeState.enabled = true;
 					}
 					hasStartedExplosionAnim = true;
 				}
@@ -130,13 +127,12 @@ public class Enemy:Actor {
 	public void PlayAmbientOverlayAnimation(string animName, float speed, float weight) {
 		AnimationState state = anim[animName];
 		if (state == null) return;
-		state.weight = weight;
-		state.wrapMode = WrapMode.Once;
 		state.layer = 5;
-		state.blendMode = AnimationBlendMode.Additive;
+		anim.Play(state.name, PlayMode.StopSameLayer);
+		state.weight = weight;
+		state.blendMode = activateAnimBlendMode;
 		state.time = 0;
 		state.speed = speed;
-		state.enabled = true;
 	}
 	
 	public void Explode() {
@@ -152,12 +148,10 @@ public class Enemy:Actor {
 		
 		AnimationState activateState = anim["activate"];
 		if (activateState != null) {
+			activateState.layer = 10;
+			anim.Play(activateState.name, PlayMode.StopSameLayer);
 			activateState.weight = 1;
-			activateState.wrapMode = WrapMode.ClampForever;
-			activateState.layer = 15;
 			activateState.blendMode = activateAnimBlendMode;
-			activateState.time = 0;
-			activateState.enabled = true;
 		}
 		
 		for (int i = 0; i < fuseEffects.Length; i++) {
