@@ -59,6 +59,7 @@
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Rope.cs" />
      <Compile Include="Assets\Scripts\ShakeDetector.cs" />
+     <Compile Include="Assets\Scripts\TimeDestroy.cs" />
      <Compile Include="Assets\SpriteEngine\BezierSpline.cs" />
      <Compile Include="Assets\SpriteEngine\Sprite.cs" />
      <Compile Include="Assets\SpriteEngine\SpriteWorldManager.cs" />

@@ -1,8 +1,20 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+[System.SerializableAttribute]
+public class AttachObjectInfo:System.Object {
+	public GameObject obj;
+	public float scaleFactor = 1.0f;
+	public Transform targetParent;
+	[HideInInspector]
+	public GameObject instance;
+}
 
 public class Enemy:Actor {
 	public EnemyInfo enemyInfo;
+	public AttachObjectInfo[] fuseEffects = new AttachObjectInfo[0];
 	public float explodeDelay = 0.0f;
 	public float explodeAnimationWeight = 0.1f;
 	public float ambientOverlayRateMin = 2.0f;
@@ -21,41 +33,6 @@ public class Enemy:Actor {
 		}
 	}
 	
-	private float nextAmbientOverlayTime = 0.0f;
-	
-	private bool hasStartedExplosionAnim = false;
-	private float activationTime = 0.0f;
-	
-	private Game _game;
-	public Game game {
-		get {
-			if (!_game) {
-				_game = (Game)FindObjectOfType(typeof(Game));
-			}
-			return _game;
-		}
-	}
-	
-	private Character _character;
-	public Character character {
-		get {
-			if (!_character) {
-				_character = gameObject.GetComponent<Character>();
-			}
-			return _character;
-		}
-	}
-	
-	private Exploder _exploder;
-	public Exploder exploder {
-		get {
-			if (!_exploder) {
-				_exploder = gameObject.GetComponent<Exploder>();
-			}
-			return _exploder;
-		}
-	}
-	
 	private AIMovement _movement;
 	public AIMovement movement {
 		get {
@@ -66,7 +43,10 @@ public class Enemy:Actor {
 		}
 	}
 	
+	private float nextAmbientOverlayTime = 0.0f;
 	
+	private bool hasStartedExplosionAnim = false;
+	private float activationTime = 0.0f;
 	
 	void Start() {
 		if (game) {
@@ -164,6 +144,18 @@ public class Enemy:Actor {
 		if (isActivated) return;
 		isActivated = true;
 		activationTime = Time.timeSinceLevelLoad;
+		
+		for (int i = 0; i < fuseEffects.Length; i++) {
+			fuseEffects[i].instance = (GameObject)Instantiate(fuseEffects[i].obj);
+			Transform t = fuseEffects[i].targetParent;
+			if (t == null) {
+				t = transform;
+			}
+			fuseEffects[i].instance.transform.parent = t;
+			fuseEffects[i].instance.transform.localPosition = Vector3.zero;
+			fuseEffects[i].instance.transform.localRotation = Quaternion.identity;
+			fuseEffects[i].instance.transform.localScale = Vector3.one*fuseEffects[i].scaleFactor;
+		}
 	}
 	
 }

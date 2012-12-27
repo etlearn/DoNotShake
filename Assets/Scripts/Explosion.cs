@@ -82,6 +82,8 @@ public class Explosion : MonoBehaviour {
 	void OnDrawGizmos() {
 		Gizmos.color = new Color(1,0,0,1);
 		Gizmos.DrawWireSphere(transform.position,currentRadius);
+		Gizmos.color = new Color(1,1,1,0.25f);
+		Gizmos.DrawWireSphere(transform.position,radius);
 	}
 	
 	void OnDestroy() {

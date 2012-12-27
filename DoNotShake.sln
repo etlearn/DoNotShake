@@ -5,6 +5,8 @@ Project("{5CAA5A2F-0ECC-0B0C-7B60-38EE2BD5FF83}") = "DoNotShake", "Assembly-CSha
 EndProject
 Project("{5CAA5A2F-0ECC-0B0C-7B60-38EE2BD5FF83}") = "DoNotShake", "Assembly-CSharp-Editor.csproj", "{96431FD9-7C00-F524-7BC6-D328C37B4DEC}"
 EndProject
+Project("{5CAA5A2F-0ECC-0B0C-7B60-38EE2BD5FF83}") = "DoNotShake", "Assembly-UnityScript.unityproj", "{2BC1EC3F-F2F8-6F7F-C82A-5D896C11525B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,11 +21,15 @@ Global
 		{96431FD9-7C00-F524-7BC6-D328C37B4DEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96431FD9-7C00-F524-7BC6-D328C37B4DEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96431FD9-7C00-F524-7BC6-D328C37B4DEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BC1EC3F-F2F8-6F7F-C82A-5D896C11525B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BC1EC3F-F2F8-6F7F-C82A-5D896C11525B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BC1EC3F-F2F8-6F7F-C82A-5D896C11525B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BC1EC3F-F2F8-6F7F-C82A-5D896C11525B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																																				GlobalSection(MonoDevelopProperties) = preSolution
+																																																						GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
