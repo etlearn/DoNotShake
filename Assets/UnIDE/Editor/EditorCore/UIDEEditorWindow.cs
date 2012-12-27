@@ -25,6 +25,8 @@ using UnityEditor;
 public class UIDEEditorWindow:EditorWindow {
 	//private Vector2 mousePos;
 	//private Vector2 lastMousePos;
+	static public EditorWindow lastFocusedWindow = null;
+	static public HashSet<Type> toggleableWindowTypes = new HashSet<Type>(new Type[] {typeof(SceneView),System.Type.GetType("UnityEditor.GameView,UnityEditor")});
 	public bool isLoaded = false;
 	
 	private UIDEEditor _editor;
@@ -42,7 +44,16 @@ public class UIDEEditorWindow:EditorWindow {
 	
 	[MenuItem ("Window/UnIDE %e")]
 	static public void Init() {
-		UIDEEditorWindow.Get();
+		if (EditorWindow.focusedWindow != null && toggleableWindowTypes.Contains(EditorWindow.focusedWindow.GetType())) {
+			lastFocusedWindow = EditorWindow.focusedWindow;
+		}
+		
+		if (EditorWindow.focusedWindow != null && EditorWindow.focusedWindow.GetType() == typeof(UIDEEditorWindow) && lastFocusedWindow != null) {
+			EditorWindow.FocusWindowIfItsOpen(lastFocusedWindow.GetType());
+		}
+		else {
+			UIDEEditorWindow.Get();
+		}
 	}
 	
 	static public UIDEEditorWindow Get() {
@@ -50,16 +61,32 @@ public class UIDEEditorWindow:EditorWindow {
 		return window;
 	}
 	
+	public void EditorApplicationUpdate() {
+		if (EditorWindow.focusedWindow != null && toggleableWindowTypes.Contains(EditorWindow.focusedWindow.GetType())) {
+			lastFocusedWindow = EditorWindow.focusedWindow;
+		}
+	}
+	
 	public void OnEnable() {
+		EditorApplication.update -= EditorApplicationUpdate;
+		EditorApplication.update += EditorApplicationUpdate;
+		//Debug.Log("OnEnable");
 		if (isLoaded) return;
 		this.wantsMouseMove = true;
 		this.Start();
 		isLoaded = true;
 	}
 	
+	public void Ondisable() {
+		EditorApplication.update -= EditorApplicationUpdate;
+	}
+	
 	public void Start() {
+		Start(false);
+	}
+	public void Start(bool isReinit) {
 		editor = new UIDEEditor();
-		editor.Start();
+		editor.Start(isReinit);
 	}
 	
 	public void OnRequestSave() {
@@ -78,6 +105,10 @@ public class UIDEEditorWindow:EditorWindow {
 		if (editor != null) {
 			editor.OnFocus();
 		}
+		//Rect p = position;
+		//p.width = 800;
+		//p.height = 500;
+		//position = p;
 	}
 	
 	void OnLostFocus() {
@@ -91,9 +122,12 @@ public class UIDEEditorWindow:EditorWindow {
 	}
 	
 	void Update() {
+		if (EditorWindow.focusedWindow != null && toggleableWindowTypes.Contains(EditorWindow.focusedWindow.GetType())) {
+			lastFocusedWindow = EditorWindow.focusedWindow;
+		}
 		this.wantsMouseMove = true;
 		if (editor == null) {
-			Start();
+			Start(true);
 		}
 		if (UIDEEditor.current != _editor) {
 			UIDEEditor.current = _editor;
@@ -117,7 +151,7 @@ public class UIDEEditorWindow:EditorWindow {
 		}
 		
 		if (editor == null) {
-			Start();
+			Start(true);
 		}
 		
 		if (UIDEEditor.current != _editor) {

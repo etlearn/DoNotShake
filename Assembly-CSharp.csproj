@@ -63,6 +63,7 @@
      <Compile Include="Assets\SpriteEngine\Sprite.cs" />
      <Compile Include="Assets\SpriteEngine\SpriteWorldManager.cs" />
      <None Include="Assets\SpriteEngine\Sprite_AlphaBlend.shader" />
+     <None Include="Assets\UnIDE\Readme.txt" />
      <None Include="Assets\Shaders\DoubleSidedSprite.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -14,7 +14,7 @@ using UIDE.RightClickMenu;
 namespace UIDE.Plugins.AutoComplete {
 	[System.Serializable]
 	public class AutoComplete:UIDEPlugin {
-		enum testEnum {butt};
+		
 		public GUISkin skin {
 			get {
 				return editor.editorWindow.theme.skin;
@@ -36,6 +36,7 @@ namespace UIDE.Plugins.AutoComplete {
 			}
 		}
 		
+		public UIDEAutoCompleteData data;
 		//public UIDEHashTable fullNamespaceHash = new UIDEHashTable();
 		//public UIDEHashTable fullNamespaceHashLower = new UIDEHashTable();
 		//public UIDENamespace globalNamespace;
@@ -46,7 +47,7 @@ namespace UIDE.Plugins.AutoComplete {
 		private bool showTooltip = false;
 		private float toolTipMaxWidth = 500.0f;
 		private TooltipItem tooltipSingle = null;
-		private Thread tooltipThread;
+		//private Thread tooltipThread;
 		
 		
 		private bool cancelTooltip = false;
@@ -109,11 +110,11 @@ namespace UIDE.Plugins.AutoComplete {
 		private string autoCompleteKey = "";
 		
 		private bool useMultiThreading = true;
-		private Thread autoCompleteThread;
+		//private Thread autoCompleteThread;
 		private List<CompletionItem> itemList = new List<CompletionItem>();
 		
 		public override void Start() {
-			
+			data = editor.editorWindow.pluginSettings.GetOrCreatePluginData<UIDEAutoCompleteData>();
 		}
 		
 		public override void OnTextEditorUpdate() {
@@ -168,7 +169,7 @@ namespace UIDE.Plugins.AutoComplete {
 				}
 				else {
 					if (Time.realtimeSinceStartup-lastMouseMoveTime >= tooltipPopupTime && editor.textEditorNoScrollBarRect.Contains(editor.windowMousePosWithTabBar)) {
-						if (!showTooltip && !dontShowToolTipAgain && (tooltipThread == null || !tooltipThread.IsAlive) && !wantsTooltipUpdate) {
+						if (!showTooltip && !dontShowToolTipAgain && (!UIDEThreadPool.IsRegistered("AutoComplete_UpdateTooltip")) && !wantsTooltipUpdate) {
 							if (editor.TestClickBlockers(editor.windowMousePos)) {
 								Vector2 cursorPos = editor.ScreenSpaceToCursorSpace(editor.windowMousePos);
 								bool isValidChar = char.IsLetterOrDigit(editor.doc.GetCharAt(cursorPos));
@@ -186,6 +187,18 @@ namespace UIDE.Plugins.AutoComplete {
 		
 		public override string OnPreEnterText(string text) {
 			bool isSubmit = (text == "\n" || text == "\r" || text == "\t");
+			if (isSubmit && text == "\n") {
+				if (data.submitOnEnterMode == 2) {
+					isSubmit = editor.syntaxRule.autoCompleteSubmitOnEnter;
+					if (!isSubmit) {
+						HideBox();
+					}
+				}
+				else if (data.submitOnEnterMode == 0) {
+					isSubmit = false;
+					HideBox();
+				}
+			}
 			if (isSubmit) {
 				if (visible) {
 					text = "";
@@ -850,46 +863,63 @@ namespace UIDE.Plugins.AutoComplete {
 		
 		private bool StartShowTooltip(Vector2 pos, bool showMethodOverloads) {
 			if (useMultiThreading) {
-				if (tooltipThread != null && tooltipThread.IsAlive) {
+				//if (tooltipThread != null && tooltipThread.IsAlive) {
+				if (UIDEThreadPool.IsRegistered("AutoComplete_UpdateTooltip")) {
 					wantsTooltipUpdate = true;
 					wantsTooltipUpdateOverloads = showMethodOverloads;
 					return false;
 				}
 				toolTipPos = pos;
-				tooltipThread = new Thread(() => StartShowTooltipActual(toolTipPos,showMethodOverloads));
+				wantsTooltipUpdate = false;
+				/*
+				tooltipThread = new Thread(() => StartShowTooltipActual(new System.Object[] {toolTipPos,showMethodOverloads}));
+				tooltipThread.IsBackground = true;
+				tooltipThread.Priority = System.Threading.ThreadPriority.BelowNormal;
 				tooltipThread.Start();
+				*/
+				UIDEThreadPool.RegisterThread("AutoComplete_UpdateTooltip",StartShowTooltipActual,new System.Object[] {toolTipPos,showMethodOverloads});
 			}
 			else {
 				toolTipPos = pos;
-				StartShowTooltipActual(toolTipPos,showMethodOverloads);
+				wantsTooltipUpdate = false;
+				StartShowTooltipActual(new System.Object[] {toolTipPos,showMethodOverloads});
 			}
 			return true;
 		}
-		private void StartShowTooltipActual(Vector2 pos, bool showMethodOverloads) {
-			if (showMethodOverloads) {
-				CompletionMethod[] methods = editor.syntaxRule.GetMethodOverloads(pos);
-				TooltipItem[] items = new TooltipItem[methods.Length];
-				for (int i = 0; i < methods.Length; i++) {
-					items[i] = new TooltipItem(methods[i]);
-				}
-				if (cancelTooltip) {
-					HideToolTip();
+		private void StartShowTooltipActual(System.Object context) {
+			try {
+				System.Object[] contextArray = (System.Object[])context;
+				Vector2 pos = (Vector2)contextArray[0];
+				bool showMethodOverloads = (bool)contextArray[1];
+				
+				if (showMethodOverloads) {
+					CompletionMethod[] methods = editor.syntaxRule.GetMethodOverloads(pos);
+					TooltipItem[] items = new TooltipItem[methods.Length];
+					for (int i = 0; i < methods.Length; i++) {
+						items[i] = new TooltipItem(methods[i]);
+					}
+					if (cancelTooltip) {
+						HideToolTip();
+					}
+					else {
+						ShowToolTip(items);
+					}
 				}
 				else {
-					ShowToolTip(items);
+					TooltipItem tItem = editor.syntaxRule.GetTooltipItem(pos);
+					if (cancelTooltip) {
+						HideToolTip();
+					}
+					else {
+						ShowToolTip(tItem);
+					}
 				}
+				editor.editorWindow.Repaint();
+				cancelTooltip = false;
 			}
-			else {
-				TooltipItem tItem = editor.syntaxRule.GetTooltipItem(pos);
-				if (cancelTooltip) {
-					HideToolTip();
-				}
-				else {
-					ShowToolTip(tItem);
-				}
+			finally {
+				UIDEThreadPool.UnregisterThread("AutoComplete_UpdateTooltip");
 			}
-			editor.editorWindow.Repaint();
-			cancelTooltip = false;
 		}
 		
 		private void OnFinishUpdateAutoCompleteListActual() {
@@ -911,23 +941,41 @@ namespace UIDE.Plugins.AutoComplete {
 		}
 		public bool TryStartUpdateAutoCompleteList(bool isChain) {
 			if (useMultiThreading) {
-				if (autoCompleteThread != null && autoCompleteThread.IsAlive) {
+				//if (autoCompleteThread != null && autoCompleteThread.IsAlive) {
+				if (UIDEThreadPool.IsRegistered("AutoComplete_UpdateAutoCompleteList")) {
 					wantsChainUpdate = isChain;
 					wantsAutoCompleteUpdate = true;
 					return false;
 				}
+				wantsAutoCompleteUpdate = false;
+				/*
 				autoCompleteThread = new Thread(() => UpdateAutoCompleteList(isChain));
+				autoCompleteThread.IsBackground = true;
+				autoCompleteThread.Priority = System.Threading.ThreadPriority.BelowNormal;
 		  		autoCompleteThread.Start();
+				*/
+				
+				UIDEThreadPool.RegisterThread("AutoComplete_UpdateAutoCompleteList",UpdateAutoCompleteList,isChain);
 			}
 			else {
+				wantsAutoCompleteUpdate = false;
 				UpdateAutoCompleteList(isChain);
 			}
 			return true;
 		}
 		
-		void UpdateAutoCompleteList(bool isChain) {
-			//float startTime = Time.realtimeSinceStartup;
+		void UpdateAutoCompleteList(System.Object context) {
+			try {
+				bool isChain = (bool)context;
+				UpdateAutoCompleteListActual(isChain);
+			}
+			finally {
+				UIDEThreadPool.UnregisterThread("AutoComplete_UpdateAutoCompleteList");
+			}
 			
+		}
+		void UpdateAutoCompleteListActual(bool isChain) {
+			//float startTime = Time.realtimeSinceStartup;
 			string startingAutoCompleteKey = autoCompleteKey;
 			
 			CompletionItem[] completionItems = new CompletionItem[0];

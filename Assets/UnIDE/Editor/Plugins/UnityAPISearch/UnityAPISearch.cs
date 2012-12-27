@@ -6,7 +6,7 @@ using System.Linq;
 //using UnityEditor;
 using UIDE.RightClickMenu;
 
-namespace UIDE.Plugins.Unity {
+namespace UIDE.Plugins.UnityAPISearch {
 	public class UnityAPISearch:UIDEPlugin {
 		public static string searchURL = "http://docs.unity3d.com/Documentation/ScriptReference/30_search.html?q=";
 		

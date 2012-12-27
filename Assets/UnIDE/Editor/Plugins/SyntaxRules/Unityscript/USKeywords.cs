@@ -119,7 +119,8 @@ namespace UIDE.SyntaxRules.Unityscript {
 			"unsafe", 
 			"while",
 			"set",
-			"get"
+			"get",
+			"yield"
 		};
 		
 		static public void RebuildKeywordHash() {

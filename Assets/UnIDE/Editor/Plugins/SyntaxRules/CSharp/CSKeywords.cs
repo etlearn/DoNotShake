@@ -114,7 +114,8 @@ namespace UIDE.SyntaxRules.CSharp {
 			"unsafe", 
 			"while",
 			"set",
-			"get"
+			"get",
+			"yield"
 		};
 		
 		static public void RebuildKeywordHash() {

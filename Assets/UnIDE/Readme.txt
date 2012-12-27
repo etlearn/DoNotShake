@@ -1,0 +1,38 @@
+Windows Hotkeys:
+Save - Ctrl+S or Ctrl+Alt+S
+Undo - Ctrl+Z or Ctrl+Alt+Z
+Redo - Ctrl+Shift+Z
+Select All - Ctrl+A
+Copy - Ctrl+C
+Cut - Ctrl+X
+Paste - Ctrl+V
+Search Unity Docs - F1
+Find Next - F3
+Find Previous - Shift+F3
+
+OSX Hotkeys:
+Save - Command+S or Command+Alt+S
+Undo - Command+Z or Command+Alt+Z
+Redo - Command+Shift+Z
+Select All - Command+A
+Copy - Command+C
+Cut - Command+X
+Paste - Command+V
+Search Unity Docs - F1
+Find Next - F3
+Find Previous - Shift+F3
+
+There is a right click menu which gives you access to basic text editing tools, as well as plugin commands such as "Search Unity Docs" and "Go To Declaration". To close tabs you can either right click and select "Close", or middle mouse click them. 
+
+Holding control and using the Left and Right arrow keys will move the cursor to the previous/next text "element". Pressing Up or Down arrow keys while holding control will increment the cursors line position up or down in increments of 4 lines.
+
+Holding Shift and using the arrow keys will move the cursor while expanding the text selection to include the cursors new position.
+
+You can add custom fonts and pick them from the settings menu. Custom fonts go into UnIDE/Editor/TextEditorFonts/YourFont/. Be sure to include YourFont.ttf as well as YourFont_B.ttf, "_B" denotes that this is the bold variation of the font.
+
+Notes:
+In order to be able to use the standard Ctrl+S (Command+S on OSX) hotkey to save your current file, you must be unity loaded into a saved scene. You can also use the alternate save hotkey in the list above at any time.
+
+On rare occasions the Undo hotkey (Ctrl+Z, Command+Z on OSX) may stop working. Unfortunately I dont have much control over this because of the way Unity handles hotkeys. Closing and reopening UnIDE usually fixes this though.
+
+In Unity 3.5 when targeting mobile or flash platforms you should go into the settings menu and uncheck "Force Dynamic Font" in the "Text" settings. You may get warnings about dynamic fonts not being supported, and you can go into the offending font import settings and change their "Character" setting from Dyanmic to Unicode. This does not effect Unity 4.0 or higher users.

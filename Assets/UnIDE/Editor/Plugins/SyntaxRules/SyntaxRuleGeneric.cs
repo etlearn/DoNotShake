@@ -21,12 +21,13 @@ namespace UIDE.SyntaxRules.Generic {
 		
 		private bool useMultiThreadingParser = true;
 		
-		private Thread updateMultiLineFormattingThread;
+		//private Thread updateMultiLineFormattingThread;
 		private bool wantsMultiLineFormattingUpdate = false;
 		
 		public SyntaxRuleGeneric() {
 			isDefault = true;
 			useGenericAutoComplete = true;
+			autoCompleteSubmitOnEnter = false;
 			//fileTypes = new string[] {".cs",".js"};
 		}
 		
@@ -416,54 +417,61 @@ namespace UIDE.SyntaxRules.Generic {
 		
 		public bool UpdateMultilineFormatting() {
 			if (useMultiThreadingParser) {
-				if (updateMultiLineFormattingThread != null && updateMultiLineFormattingThread.IsAlive) {
+				//if (updateMultiLineFormattingThread != null && updateMultiLineFormattingThread.IsAlive) {
+				if (UIDEThreadPool.IsRegistered("SRG_UpdateMultilineFormatting")) {
 					wantsMultiLineFormattingUpdate = true;
 					return false;
 				}
+				wantsMultiLineFormattingUpdate = false;
+				/*
 				updateMultiLineFormattingThread = new Thread(UpdateMultilineFormattingActual);
 				updateMultiLineFormattingThread.Start();
-				wantsMultiLineFormattingUpdate = false;
+				*/
+				UIDEThreadPool.RegisterThread("SRG_UpdateMultilineFormatting",UpdateMultilineFormattingActual);
 			}
 			else {
-				UpdateMultilineFormattingActual();
+				UpdateMultilineFormattingActual(null);
 				wantsMultiLineFormattingUpdate = false;
 			}
 			return true;
 		}
-		private void UpdateMultilineFormattingActual() {
-			
-			bool isInBlockComment = false;
-			UIDETokenDef multiBlockTokenDef = UIDETokenDefs.Get("Comment,Block,Start");
-			//Debug.Log(multiBlockTokenDef.isBold);
-			for (int i = 0; i < editor.doc.lineCount; i++) {
-				if (i >= editor.doc.lineCount) break;
-				UIDELine line = editor.doc.RealLineAt(i);
-				if (line == null) continue;
-				lock (line) {
-					line.overrideTokenDef = null;
-					if (!isInBlockComment) {
-						if (line.elements.Count > 0) {
-							UIDEElement lastElement = line.GetLastNonWhitespaceElement(true);
-							if (lastElement != null && lastElement.tokenDef.rawTypes == "Comment,Block,Start") {
-								//Debug.Log(lastElement.line.rawText);
-								isInBlockComment = true;
+		private void UpdateMultilineFormattingActual(System.Object context) {
+			try {
+				bool isInBlockComment = false;
+				UIDETokenDef multiBlockTokenDef = UIDETokenDefs.Get("Comment,Block,Start");
+				//Debug.Log(multiBlockTokenDef.isBold);
+				for (int i = 0; i < editor.doc.lineCount; i++) {
+					if (i >= editor.doc.lineCount) break;
+					UIDELine line = editor.doc.RealLineAt(i);
+					if (line == null) continue;
+					lock (line) {
+						line.overrideTokenDef = null;
+						if (!isInBlockComment) {
+							if (line.elements.Count > 0) {
+								UIDEElement lastElement = line.GetLastNonWhitespaceElement(true);
+								if (lastElement != null && lastElement.tokenDef.rawTypes == "Comment,Block,Start") {
+									//Debug.Log(lastElement.line.rawText);
+									isInBlockComment = true;
+								}
 							}
 						}
-					}
-					else {
-						if (line.elements.Count > 0) {
-							UIDEElement firstElement = line.GetFirstNonWhitespaceElement(true);
-							if (firstElement != null && firstElement.tokenDef.rawTypes == "Comment,Block,End") {
-								isInBlockComment = false;
+						else {
+							if (line.elements.Count > 0) {
+								UIDEElement firstElement = line.GetFirstNonWhitespaceElement(true);
+								if (firstElement != null && firstElement.tokenDef.rawTypes == "Comment,Block,End") {
+									isInBlockComment = false;
+								}
 							}
-						}
-						if (isInBlockComment) {
-							line.overrideTokenDef = multiBlockTokenDef;
+							if (isInBlockComment) {
+								line.overrideTokenDef = multiBlockTokenDef;
+							}
 						}
 					}
 				}
 			}
-			
+			finally {
+				UIDEThreadPool.UnregisterThread("SRG_UpdateMultilineFormatting");
+			}
 			//editor.editorWindow.Repaint();
 		}	
 		

@@ -16,9 +16,9 @@ namespace UIDE.Plugins.ErrorTracking {
 		private UIDELogEntry currentFileLogEntry;
 		private UIDELogEntry currentLogEntry;
 		private GUIStyle lineErrorStyle;
-		private GUIStyle lineWarningStyle;
 		private GUIStyle boxStyle;
 		private GUIStyle closeButtonStyle;
+		private GUIStyle shadowStyle;
 		private Vector2 desiredBoxSize = new Vector2(0,0);
 		private Rect windowRect;
 		private bool forceClosed = false;
@@ -43,12 +43,13 @@ namespace UIDE.Plugins.ErrorTracking {
 			lastConsoleRawText = "-1";
 			editor.onPreRenderLineCallbacks.Add(OnPreRenderLine);
 			lineErrorStyle = editor.editorWindow.theme.GetStyle("LineErrorBG");
-			lineWarningStyle = editor.editorWindow.theme.GetStyle("LineWarningBG");
 			boxStyle = editor.editorWindow.theme.GetStyle("PopupWindowBackground");
 			closeButtonStyle = editor.editorWindow.theme.GetStyle("CloseButton");
+			shadowStyle = editor.editorWindow.theme.GetStyle("DropShadow");
 		}
 		
 		public override void OnFocus() {
+			
 			lastConsoleUpdateTime = 0.0f;
 			lastConsoleRawText = "-1";
 			//forceClosed = false;
@@ -76,7 +77,7 @@ namespace UIDE.Plugins.ErrorTracking {
 				UpdateSelectedConsoleEntry();
 			}
 			if (isVisible) {
-			Rect clickBlocker = windowRect;
+				Rect clickBlocker = windowRect;
 				clickBlocker.x -= editor.rect.x;
 				clickBlocker.y -= editor.desiredTabBarHeight;
 				editor.clickBlockers.Add(CreateClickBlocker(clickBlocker));
@@ -87,10 +88,12 @@ namespace UIDE.Plugins.ErrorTracking {
 			if (!isVisible) return;
 			GUI.skin = editor.editorWindow.theme.skin;
 			
+			Rect shadowRect = windowRect;
+			shadowRect.x -= editor.rect.x;
+			GUI.Box(shadowRect,"",shadowStyle);
 			
 			GUI.Window(windowID, windowRect, RenderMessage, "",boxStyle);
 			GUI.BringWindowToFront(windowID);
-			
 		}
 		
 		public void RenderMessage(int windowID) {
@@ -107,7 +110,11 @@ namespace UIDE.Plugins.ErrorTracking {
 			string message = GetMessage(entry);
 			
 			GUILayout.BeginHorizontal();
-			GUILayout.Label(message);
+			GUIStyle wordWrapLabel = new GUIStyle(GUI.skin.label);
+			wordWrapLabel.wordWrap = true;
+			
+			GUILayout.Label(message,wordWrapLabel);
+			
 			if (GUILayout.Button("",closeButtonStyle)) {
 				forceClosed = true;
 			}
@@ -126,6 +133,7 @@ namespace UIDE.Plugins.ErrorTracking {
 			desiredBoxSize = CalcSize(entry);
 			windowRect = editor.textEditorRect;
 			windowRect.x = editor.rect.x;
+			windowRect.width -= editor.editorWindow.defaultSkin.verticalScrollbar.fixedWidth;
 			
 			windowRect.x += windowRect.width*1f;
 			windowRect.y += windowRect.height*1f;
@@ -133,10 +141,11 @@ namespace UIDE.Plugins.ErrorTracking {
 			windowRect.width = Mathf.Min(windowRect.width,desiredBoxSize.x);
 			windowRect.height = Mathf.Min(windowRect.height,desiredBoxSize.y);
 			
+			
 			windowRect.x -= windowRect.width*1f;
 			windowRect.y -= windowRect.height*1f;
 			
-			windowRect.x -= editor.editorWindow.defaultSkin.verticalScrollbar.fixedWidth;
+			//windowRect.x -= editor.editorWindow.defaultSkin.verticalScrollbar.fixedWidth;
 			windowRect.y -= editor.editorWindow.defaultSkin.horizontalScrollbar.fixedHeight;
 			if (anchorTop) {
 				windowRect.y = editor.desiredTabBarHeight;
@@ -148,10 +157,12 @@ namespace UIDE.Plugins.ErrorTracking {
 			string message = GetMessage(entry);
 			GUIContent content = new GUIContent(message);
 			
-			//float desiredWidth = Mathf.Min(editor.textEditorRect.width-editor.editorWindow.defaultSkin.verticalScrollbar.fixedWidth,400);
-			float desiredWidth = editor.textEditorRect.width-editor.editorWindow.defaultSkin.verticalScrollbar.fixedWidth;
-			float height = GUI.skin.label.CalcHeight(content,desiredWidth);
-			//height += GUI.skin.label.padding.top+GUI.skin.label.padding.bottom;
+			GUIStyle wordWrapLabel = new GUIStyle(GUI.skin.label);
+			wordWrapLabel.wordWrap = true;
+			
+			float desiredWidth = editor.textEditorRect.width-editor.editorWindow.defaultSkin.verticalScrollbar.fixedWidth*2;
+			float height = wordWrapLabel.CalcHeight(content,desiredWidth);
+			
 			height += GUI.skin.label.margin.top+GUI.skin.label.margin.bottom;
 			
 			GUIStyle noWordWrapStyle = new GUIStyle(GUI.skin.label);
@@ -215,11 +226,17 @@ namespace UIDE.Plugins.ErrorTracking {
 				logLineRect.x = editor.doc.scroll.x;
 				logLineRect.height = editor.charSize.y;
 				logLineRect.y = (line.index)*editor.charSize.y;
+				
+				string lowerLogType = currentFileLogEntry.logType.ToLower();
 				GUIStyle style = lineErrorStyle;
-				if (currentFileLogEntry.logType == "warning") {
-					style = lineWarningStyle;
+				Color color = editor.editorWindow.theme.errorColor;
+				if (lowerLogType == "warning") {
+					color = editor.editorWindow.theme.warningColor;
 				}
-				GUI.color = style.normal.textColor;
+				else if (lowerLogType == "assert" || lowerLogType == "unknown assert") {
+					color = editor.editorWindow.theme.assertColor;
+				}
+				GUI.color = color;
 				GUI.Box(logLineRect,"",style);
 				GUI.color = Color.white;
 			}
@@ -324,7 +341,7 @@ namespace UIDE.Plugins.ErrorTracking {
 				return;
 			}
 			
-			Regex conRegex = new Regex(@"(?<type>Assert|Log) in file: (?<filename>Assets/(?:\w+/)*(?:\w+\.\w+)+) at line: (?:(?<line>\d+))");
+			Regex conRegex = new Regex(@"(?<type>Assert|Log|Error) in file: (?<filename>Assets/(?:\w+/)*(?:\w+\.\w+)+) at line: (?:(?<line>\d+))");
 			Match conMatch = conRegex.Match(activeContext);
 			if (conMatch.Success) {
 				
