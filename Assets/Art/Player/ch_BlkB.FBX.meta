@@ -5,9 +5,16 @@ ModelImporter:
     4300000: bomb
     4300002: leg R
     4300004: leg L001
+    4300006: ch_BlkB
     7400000: Take 001 //// char_walk_0to7_idle_10to25
     7400002: walk //// char_walk_0to7_idle_10to25
     7400004: idle //// char_walk_0to7_idle_10to25
+    7400006: walk //// ch_BlkB
+    7400008: idle //// ch_BlkB
+    7400010: idle A //// ch_BlkB
+    7400012: Jump //// ch_BlkB
+    7400014: Blink //// ch_BlkB
+    7400016: Explode //// ch_BlkB
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -24,15 +31,30 @@ ModelImporter:
     animationWrapMode: 0
     clipAnimations:
     - name: walk
-      firstFrame: 0
-      lastFrame: 7
+      firstFrame: 1
+      lastFrame: 21
       wrapMode: 2
       loop: 1
-    - name: idle
-      firstFrame: 10
-      lastFrame: 25
+    - name: idle A
+      firstFrame: 63
+      lastFrame: 83
       wrapMode: 2
       loop: 1
+    - name: Jump
+      firstFrame: 22
+      lastFrame: 36
+      wrapMode: 0
+      loop: 0
+    - name: Blink
+      firstFrame: 37
+      lastFrame: 62
+      wrapMode: 0
+      loop: 1
+    - name: Explode
+      firstFrame: 84
+      lastFrame: 102
+      wrapMode: 0
+      loop: 0
   meshes:
     lODScreenPercentages: []
     globalScale: .00999999978
@@ -60,37 +82,64 @@ ModelImporter:
         first: 4
         second: 841a0600
       data:
-        first: 23
-        second: 64182300
-      data:
-        first: 33
-        second: a45a3200
-      data:
         first: 111
         second: 605fa900
-    leg L001:
+    ch_BlkB:
+      data:
+        first: 1
+        second: aa860100
+      data:
+        first: 4
+        second: 8a1a0600
+      data:
+        first: 137
+        second: a00bd100
+    rig_BlkB_eyes:
+      data:
+        first: 1
+        second: b0860100
+      data:
+        first: 4
+        second: 901a0600
+    rig_BlkB_head:
+      data:
+        first: 1
+        second: a8860100
+      data:
+        first: 4
+        second: 881a0600
+    rig_BlkB_heel_L:
       data:
         first: 1
         second: a2860100
       data:
         first: 4
         second: 821a0600
+    rig_BlkB_heel_R:
       data:
-        first: 23
-        second: 62182300
+        first: 1
+        second: ac860100
       data:
-        first: 33
-        second: a25a3200
-    leg R:
+        first: 4
+        second: 8c1a0600
+    rig_BlkB_root:
+      data:
+        first: 1
+        second: ae860100
+      data:
+        first: 4
+        second: 8e1a0600
+    rig_BlkB_toe_L:
       data:
         first: 1
         second: a0860100
       data:
         first: 4
         second: 801a0600
+    rig_BlkB_toe_R:
       data:
-        first: 23
-        second: 60182300
+        first: 1
+        second: a6860100
       data:
-        first: 33
-        second: a05a3200
+        first: 4
+        second: 861a0600
