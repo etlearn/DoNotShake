@@ -492,7 +492,7 @@ MonoBehaviour:
     targetParent: {fileID: 400026}
     instance: {fileID: 0}
   explodeDelay: .5
-  explodeAnimationWeight: .0250000004
+  explodeAnimationWeight: .100000001
   ambientOverlayRateMin: 2
   ambientOverlayRateMax: 5
   ambientOverlayAnimations:
