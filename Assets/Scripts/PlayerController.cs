@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerController:Actor {
 	public float speed = 10.0f;
+	public float walkAnimSpeed = 1.0f;
 	public float maxWalkSpeed = 30.0f;
 	public float tiltThreashold = 0.1f;
 	public float keyboardTiltRate = 0.25f;
@@ -16,29 +17,14 @@ public class PlayerController:Actor {
 	
 	void Start() {
 		anim.wrapMode = WrapMode.Loop;
-		anim.Play("idle");
+		//PlayAnimation("idle",1);
+		//PlayAnimation
 	}
 	
 	void Update() {
 		UpdateKeyboardTilt();
 		transform.eulerAngles = new Vector3(0,180,0);
-		/*
-		if (rigidbody.velocity.magnitude > 0.5f) {
-			PlayAnimation("walk",1);
-			Vector3 rot = transform.eulerAngles;
-			if (keyboardTilt.x < 0.0f) {
-				rot.y = -90.0f;
-				transform.eulerAngles = rot;
-			}
-			else {
-				rot.y = 90.0f;
-				transform.eulerAngles = rot;
-			}
-		}
-		else {
-			PlayAnimation("idle",1);
-		}
-		*/
+		
 		if (isShakeJumping) {
 			if (character.isGrounded) {
 				isShakeJumping = false;
@@ -51,7 +37,19 @@ public class PlayerController:Actor {
 			}
 		}
 		if (character.isGrounded) {
-			PlayAnimation("idle",1);
+			Vector3 localVel = rigidbody.velocity;
+			localVel= transform.InverseTransformDirection(localVel);
+			if (Mathf.Abs(localVel.x) > 0.5f) {
+				if (localVel.x > 0) {
+					PlayAnimation("walkleft",walkAnimSpeed);
+				}
+				else {
+					PlayAnimation("walkright",walkAnimSpeed);
+				}
+			}
+			else {
+				PlayAnimation("idle",1);
+			}
 		}
 	}
 	

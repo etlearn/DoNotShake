@@ -40,17 +40,22 @@ public class Actor:MonoBehaviour {
 		}
 	}
 	
+	public void PlayAnimation(string animName) {
+		PlayAnimation(animName,1.0f);
+	}
 	public void PlayAnimation(string animName, float speed) {
 		PlayAnimation(animName,speed,0.0f);
 	}
-	public void PlayAnimation(string animName, float speed, float startTime) {
+	public void PlayAnimation(string animName, float speed,float startTime) {
+		PlayAnimation(animName,speed,startTime,WrapMode.Loop);
+	}
+	public void PlayAnimation(string animName, float speed, float startTime, WrapMode wrapMode) {
 		if (!anim) return;
 		AnimationClip clip = anim.GetClip(animName);
 		if (anim.clip != clip || !anim.isPlaying) {
-			//anim.Blend(animName,1,0.5f);
-			anim.wrapMode = WrapMode.Loop;
+			anim.wrapMode = wrapMode;
 			anim.clip = clip;
-			anim.Blend(anim.clip.name, 1.0f, 0.5f);
+			anim.CrossFade(anim.clip.name, 0.5f);
 			anim[animName].time = startTime;
 			anim[animName].speed = speed;
 		}
