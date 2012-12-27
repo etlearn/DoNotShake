@@ -14,9 +14,6 @@ Desktop.ini
 # Ignore The following directories / file extensions
 Library
 Temp
-Assets/UnIDE/Editor/_TMP
-Assets/UnIDE/Editor/DUMMYASSET.psd
-Assets/UnIDE/Editor/DUMMYASSET.psd.meta
 
 # Ignore the following file extensions
 *.exe
