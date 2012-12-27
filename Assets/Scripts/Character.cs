@@ -14,7 +14,7 @@ public class Character:MonoBehaviour {
 	public Vector3 groundPos;
 	public Vector3 groundNormal;
 	public Vector3 footNormal;
-	public float dum;
+	
 	void Start() {
 		
 	}
