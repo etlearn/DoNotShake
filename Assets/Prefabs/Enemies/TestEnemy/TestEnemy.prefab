@@ -492,12 +492,12 @@ MonoBehaviour:
     targetParent: {fileID: 400026}
     instance: {fileID: 0}
   explodeDelay: .5
-  explodeAnimationWeight: .100000001
+  explodeAnimationWeight: .0250000004
   ambientOverlayRateMin: 2
   ambientOverlayRateMax: 5
   ambientOverlayAnimations:
   - blink
-  activateBlendMode: 0
+  activateAnimBlendMode: 0
   isActivated: 0
 --- !u!114 &11400002
 MonoBehaviour:
