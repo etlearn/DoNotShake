@@ -56,8 +56,8 @@ ModelImporter:
       wrapMode: 0
       loop: 0
     - name: walkleft
-      firstFrame: 1
-      lastFrame: 21
+      firstFrame: 104
+      lastFrame: 124
       wrapMode: 2
       loop: 1
     - name: walkright
