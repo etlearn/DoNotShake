@@ -497,6 +497,7 @@ MonoBehaviour:
   ambientOverlayRateMax: 5
   ambientOverlayAnimations:
   - blink
+  activateBlendMode: 0
   isActivated: 0
 --- !u!114 &11400002
 MonoBehaviour:

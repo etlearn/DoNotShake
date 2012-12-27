@@ -14,6 +14,7 @@ ModelImporter:
     7400016: idlealt1 //// ch_StarR
     7400018: idlealt2 //// ch_StarR
     7400020: launch //// ch_StarR
+    7400022: activate //// ch_StarR
   serializedVersion: 10
   materials:
     importMaterials: 0
@@ -44,7 +45,7 @@ ModelImporter:
       lastFrame: 240
       wrapMode: 2
       loop: 1
-    - name: launch
+    - name: activate
       firstFrame: 241
       lastFrame: 358
       wrapMode: 8

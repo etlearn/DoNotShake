@@ -20,6 +20,7 @@ public class Enemy:Actor {
 	public float ambientOverlayRateMin = 2.0f;
 	public float ambientOverlayRateMax = 5.0f;
 	public string[] ambientOverlayAnimations = new string[0];
+	public AnimationBlendMode activateAnimBlendMode = AnimationBlendMode.Blend;
 	
 	[HideInInspector]
 	public bool isActivated = false;
@@ -89,13 +90,17 @@ public class Enemy:Actor {
 					float startTime = Mathf.Max(explodeAnimLength-explodeDelay,0.0f);
 					
 					AnimationState explodeState = anim["explode"];
-					explodeState.weight = explodeAnimationWeight;
-					explodeState.wrapMode = WrapMode.ClampForever;
-					explodeState.layer = 10;
-					explodeState.blendMode = AnimationBlendMode.Additive;
-					explodeState.time = startTime;
-					explodeState.enabled = true;
-					
+					if (explodeState != null) {
+						//Debug.Log(gameObject+" "+startTime+" "+explodeAnimLength);
+						explodeState.layer = 10;
+						anim.Play(explodeState.name, PlayMode.StopSameLayer);
+						//explodeState.weight = explodeAnimationWeight;
+						explodeState.wrapMode = WrapMode.ClampForever;
+						//explodeState.layer = 10;
+						//explodeState.blendMode = AnimationBlendMode.Additive;
+						explodeState.time = startTime;
+						explodeState.enabled = true;
+					}
 					hasStartedExplosionAnim = true;
 				}
 			}
@@ -144,6 +149,16 @@ public class Enemy:Actor {
 		if (isActivated) return;
 		isActivated = true;
 		activationTime = Time.timeSinceLevelLoad;
+		
+		AnimationState activateState = anim["activate"];
+		if (activateState != null) {
+			activateState.weight = 1;
+			activateState.wrapMode = WrapMode.ClampForever;
+			activateState.layer = 15;
+			activateState.blendMode = activateAnimBlendMode;
+			activateState.time = 0;
+			activateState.enabled = true;
+		}
 		
 		for (int i = 0; i < fuseEffects.Length; i++) {
 			fuseEffects[i].instance = (GameObject)Instantiate(fuseEffects[i].obj);
