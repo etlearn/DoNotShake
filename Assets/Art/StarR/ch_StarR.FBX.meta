@@ -7,6 +7,13 @@ ModelImporter:
     7400002: idle //// ch_StarR
     7400004: idle0 //// ch_StarR
     7400006: walk //// ch_StarR
+    7400008: idleA //// ch_StarR
+    7400010: idleB //// ch_StarR
+    7400012: idleC //// ch_StarR
+    7400014: Launch //// ch_StarR
+    7400016: idlealt1 //// ch_StarR
+    7400018: idlealt2 //// ch_StarR
+    7400020: launch //// ch_StarR
   serializedVersion: 10
   materials:
     importMaterials: 0
@@ -27,10 +34,20 @@ ModelImporter:
       lastFrame: 79
       wrapMode: 2
       loop: 1
-    - name: walk
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 0
+    - name: idlealt1
+      firstFrame: 80
+      lastFrame: 160
+      wrapMode: 2
+      loop: 1
+    - name: idlealt2
+      firstFrame: 161
+      lastFrame: 240
+      wrapMode: 2
+      loop: 1
+    - name: launch
+      firstFrame: 241
+      lastFrame: 358
+      wrapMode: 8
       loop: 0
   meshes:
     lODScreenPercentages: []
