@@ -63,9 +63,6 @@
      <None Include="Assets\SpriteEngine\Sprite_AlphaBlend.shader" />
      <None Include="Assets\UnIDE\Readme.txt" />
      <None Include="Assets\Shaders\DoubleSidedSprite.shader" />
- <Reference Include="Assembly-UnityScript">
- <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>
- </Reference>
  <Reference Include="UnIDE">
  <HintPath>Assets\UnIDE\Editor\UnIDE.dll</HintPath>
  </Reference>
