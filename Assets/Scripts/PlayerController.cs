@@ -10,6 +10,12 @@ public class PlayerController:Actor {
 	public float maxKeyboardTilt = 0.5f;
 	public float extraGravity = 1.0f;
 	public float shakeJumpMultiplyer = 5.0f;
+	
+	public float ambientOverlayRateMin = 2.0f;
+	public float ambientOverlayRateMax = 5.0f;
+	public string[] ambientOverlayAnimations = new string[0];
+	private float nextAmbientOverlayTime = 0.0f;
+	
 	private Vector2 keyboardTilt;
 	private bool isShakeJumping = false;
 	private float shakeJumpPower = 0.0f;
@@ -24,6 +30,12 @@ public class PlayerController:Actor {
 	void Update() {
 		UpdateKeyboardTilt();
 		transform.eulerAngles = new Vector3(0,180,0);
+		
+		if (ambientOverlayAnimations.Length > 0 && Time.timeSinceLevelLoad >= nextAmbientOverlayTime) {
+			string animName = ambientOverlayAnimations[Random.Range(0,ambientOverlayAnimations.Length)];
+			PlayAmbientOverlayAnimation(animName,1.0f,1.0f);
+			nextAmbientOverlayTime = GetNextRandomOverlayTime();
+		}
 		
 		if (isShakeJumping) {
 			if (character.isGrounded) {
@@ -84,6 +96,23 @@ public class PlayerController:Actor {
 		//rigidbody.AddForce(Vector3.up*power*1000.0f,ForceMode.Impulse);
 	}
 	
+	public float GetNextRandomOverlayTime() {
+		float v = Random.Range(ambientOverlayRateMin,ambientOverlayRateMax);
+		return Time.timeSinceLevelLoad+v;
+	}
+	public void PlayAmbientOverlayAnimation(string animName, float speed, float weight) {
+		AnimationState state = anim[animName];
+		if (state == null) return;
+		state.layer = 5;
+		anim.Play(state.name, PlayMode.StopSameLayer);
+		state.weight = weight;
+		state.wrapMode = WrapMode.Once;
+		state.blendMode = AnimationBlendMode.Additive;
+		//state.blendMode = activateAnimBlendMode;
+		state.time = 0;
+		state.speed = speed;
+		SendMessage("OnPlayerPlayAmbientOverlayAnimation",state,SendMessageOptions.DontRequireReceiver);
+	}
 	
 	public void FixedUpdate() {
 		float horizontalTiltForce = 0.0f;
@@ -105,7 +134,13 @@ public class PlayerController:Actor {
 	public void UpdateKeyboardTilt() {
 		float keyValue = 0.0f;
 		keyValue += Input.GetAxis("Horizontal");
-		keyValue += Input.acceleration.y;
+		if (Application.platform == RuntimePlatform.Android) {
+			keyValue += -Input.acceleration.y;
+		}
+		else {
+			keyValue += Input.acceleration.y;
+		}
+		
 		//keyboardTilt.x = keyValue;
 		keyboardTilt.x = Mathf.Lerp(keyboardTilt.x,keyValue,keyboardTiltRate*Time.deltaTime);
 		keyboardTilt.x = Mathf.Clamp(keyboardTilt.x,-maxKeyboardTilt,maxKeyboardTilt);

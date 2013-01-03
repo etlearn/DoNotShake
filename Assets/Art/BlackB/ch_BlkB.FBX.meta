@@ -22,7 +22,7 @@ ModelImporter:
     7400026: walkright //// ch_BlkB
   serializedVersion: 10
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -48,8 +48,8 @@ ModelImporter:
     - name: blink
       firstFrame: 37
       lastFrame: 62
-      wrapMode: 0
-      loop: 0
+      wrapMode: 2
+      loop: 1
     - name: explode
       firstFrame: 84
       lastFrame: 102

@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 public class ShakeDetector:MonoBehaviour {
+	public float outMagScaler = 1.0f;
+	public float maxOutput = 3.0f;
+	public float lowPassRate = 1.0f;
+	
 	public float accelerometerUpdateIntervalRate = 30.0f;
 	
 	// The greater the value of LowPassKernelWidthInSeconds, the slower the filtered value will converge towards current input sample (and vice versa).
@@ -19,11 +23,24 @@ public class ShakeDetector:MonoBehaviour {
 	void Start() {
 		accelerometerUpdateInterval = 1.0f/accelerometerUpdateIntervalRate;
 		lowPassFilterFactor = accelerometerUpdateInterval/lowPassKernelWidthInSeconds;
-		shakeDetectionThreshold *= shakeDetectionThreshold;
+		//shakeDetectionThreshold *= shakeDetectionThreshold;
 		lowPassValue = Input.acceleration;
 	}
 	
 	void Update() {
+		acceleration = Input.acceleration;
+		deltaAcceleration = acceleration-lowPassValue;
+		lowPassValue = Vector3.Lerp(lowPassValue, acceleration, lowPassRate*Time.deltaTime);
+		
+		if (deltaAcceleration.magnitude >= shakeDetectionThreshold){
+			// Perform your "shaking actions" here, with suitable guards in the if check above, if necessary to not, to not fire again if they're already being performed.
+			float output = deltaAcceleration.magnitude*outMagScaler;
+			output = Mathf.Min(maxOutput,output);
+			gameObject.SendMessage("OnShakeDevice",output,SendMessageOptions.DontRequireReceiver);
+			//Debug.Log("Shake event detected at time "+Time.time);
+		}
+		
+		/*
 		acceleration = Input.acceleration;
 		lowPassValue = Vector3.Lerp(lowPassValue, acceleration, lowPassFilterFactor);
 		deltaAcceleration = acceleration-lowPassValue;
@@ -32,5 +49,6 @@ public class ShakeDetector:MonoBehaviour {
 			gameObject.SendMessage("OnShakeDevice",deltaAcceleration.sqrMagnitude,SendMessageOptions.DontRequireReceiver);
 			Debug.Log("Shake event detected at time "+Time.time);
 		}
+		*/
 	}
 }

@@ -54,9 +54,10 @@ public class Actor:MonoBehaviour {
 		AnimationClip clip = anim.GetClip(animName);
 		if (!clip) return;
 		if (anim.clip != clip || !anim.isPlaying) {
-			anim.wrapMode = wrapMode;
+			
 			anim.clip = clip;
 			anim.CrossFade(anim.clip.name, 0.5f);
+			anim[animName].wrapMode = wrapMode;
 			anim[animName].time = startTime;
 			anim[animName].speed = speed;
 		}

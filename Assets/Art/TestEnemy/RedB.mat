@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: RedB
-  m_Shader: {fileID: 7, guid: 0000000000000000e000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: b673a136a2f6114479c414cdc281e7b2, type: 1}
   m_SavedProperties:
     serializedVersion: 2
     m_TexEnvs:
@@ -18,9 +18,25 @@ Material:
           m_Texture: {fileID: 2800000, guid: 37a2a1a1135a5b94e8c50d941de8770c, type: 1}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
-    m_Floats: {}
+    m_Floats:
+      data:
+        first:
+          name: _FresnelPower
+        second: 5
+      data:
+        first:
+          name: _FresnelVontrast
+        second: 1
+      data:
+        first:
+          name: _FresnelContrast
+        second: 3
     m_Colors:
       data:
         first:
           name: _Color
         second: {r: .835820913, g: .835820913, b: .835820913, a: 1}
+      data:
+        first:
+          name: _FresnelTint
+        second: {r: 1, g: 1, b: 1, a: 1}

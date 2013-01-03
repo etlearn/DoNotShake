@@ -345,6 +345,10 @@ MonoBehaviour:
   maxKeyboardTilt: .5
   extraGravity: 1
   shakeJumpMultiplyer: 2
+  ambientOverlayRateMin: 2
+  ambientOverlayRateMax: 5
+  ambientOverlayAnimations:
+  - blink
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -389,7 +393,7 @@ SkinnedMeshRenderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: ee35bdd5c3da3d3489af98994c56ea8e, type: 2}
+  - {fileID: 2100000, guid: 25dc1928c1e771748af668208d2a75ce, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0

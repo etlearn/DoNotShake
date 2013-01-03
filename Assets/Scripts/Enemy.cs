@@ -133,7 +133,7 @@ public class Enemy:Actor {
 		state.layer = 5;
 		anim.Play(state.name, PlayMode.StopSameLayer);
 		state.weight = weight;
-		state.blendMode = activateAnimBlendMode;
+		//state.blendMode = activateAnimBlendMode;
 		state.time = 0;
 		state.speed = speed;
 		SendMessage("OnEnemyPlayAmbientOverlayAnimation",state,SendMessageOptions.DontRequireReceiver);
