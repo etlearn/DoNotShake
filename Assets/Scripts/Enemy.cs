@@ -17,10 +17,13 @@ public class Enemy:Actor {
 	public AttachObjectInfo[] fuseEffects = new AttachObjectInfo[0];
 	public float explodeDelay = 0.0f;
 	public float explodeAnimationWeight = 0.1f;
+	public float walkAnimSpeed = 1.0f;
+	public float idleAnimSpeed = 1.0f;
 	public float ambientOverlayRateMin = 2.0f;
 	public float ambientOverlayRateMax = 5.0f;
 	public string[] ambientOverlayAnimations = new string[0];
 	public AnimationBlendMode activateAnimBlendMode = AnimationBlendMode.Blend;
+	public WrapMode activateAnimationWrapMode = WrapMode.Default;
 	
 	[HideInInspector]
 	public bool isActivated = false;
@@ -53,10 +56,10 @@ public class Enemy:Actor {
 		if (game) {
 			game.AddEnemy(this);
 		}
-		if (anim) {
-			anim.wrapMode = WrapMode.Loop;
-			anim.Play("idle");
-		}
+		//if (anim) {
+		//	anim.wrapMode = WrapMode.Loop;
+		//	anim.Play("idle");
+		//}
 		nextAmbientOverlayTime = GetNextRandomOverlayTime();
 		nextAmbientOverlayTime = Random.Range(0.0f,ambientOverlayRateMax);
 	}
@@ -77,10 +80,10 @@ public class Enemy:Actor {
 			
 		if (!isActivated) {
 			if (shouldPlayWalkAnim) {
-				PlayAnimation("walk",1.0f);
+				PlayAnimation("walk",walkAnimSpeed);
 			}
 			else {
-				PlayAnimation("idle",1.0f);
+				PlayAnimation("idle",idleAnimSpeed);
 			}
 		}
 		
@@ -133,12 +136,14 @@ public class Enemy:Actor {
 		state.blendMode = activateAnimBlendMode;
 		state.time = 0;
 		state.speed = speed;
+		SendMessage("OnEnemyPlayAmbientOverlayAnimation",state,SendMessageOptions.DontRequireReceiver);
 	}
 	
 	public void Explode() {
 		if (exploder) {
 			exploder.Explode();
 		}
+		SendMessage("OnEnemyExplode",SendMessageOptions.DontRequireReceiver);
 	}
 	
 	public void Activate() {
@@ -149,6 +154,7 @@ public class Enemy:Actor {
 		AnimationState activateState = anim["activate"];
 		if (activateState != null) {
 			activateState.layer = 10;
+			activateState.wrapMode = activateAnimationWrapMode;
 			anim.Play(activateState.name, PlayMode.StopSameLayer);
 			activateState.weight = 1;
 			activateState.blendMode = activateAnimBlendMode;
@@ -165,6 +171,7 @@ public class Enemy:Actor {
 			fuseEffects[i].instance.transform.localRotation = Quaternion.identity;
 			fuseEffects[i].instance.transform.localScale = Vector3.one*fuseEffects[i].scaleFactor;
 		}
+		SendMessage("OnEnemyActivate",SendMessageOptions.DontRequireReceiver);
 	}
 	
 }

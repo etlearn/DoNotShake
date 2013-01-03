@@ -35,11 +35,16 @@ namespace UIDE.Plugins.AutoComplete {
 				return editor.syntaxRule.useGenericAutoComplete;
 			}
 		}
+		public bool isEnabled {
+			get {
+				if (editor.editorWindow.generalSettings.GetDisableCompletion()) {
+					return false;
+				}
+				return true;
+			}
+		}
 		
 		public UIDEAutoCompleteData data;
-		//public UIDEHashTable fullNamespaceHash = new UIDEHashTable();
-		//public UIDEHashTable fullNamespaceHashLower = new UIDEHashTable();
-		//public UIDENamespace globalNamespace;
 		
 		public Rect rect;
 		
@@ -47,8 +52,6 @@ namespace UIDE.Plugins.AutoComplete {
 		private bool showTooltip = false;
 		private float toolTipMaxWidth = 500.0f;
 		private TooltipItem tooltipSingle = null;
-		//private Thread tooltipThread;
-		
 		
 		private bool cancelTooltip = false;
 		private bool wantsTooltipRectUpdate = false;
@@ -118,6 +121,7 @@ namespace UIDE.Plugins.AutoComplete {
 		}
 		
 		public override void OnTextEditorUpdate() {
+			if (!isEnabled) return;
 			
 			if (newVisibleState != visible) {
 				visible = newVisibleState;
@@ -186,6 +190,7 @@ namespace UIDE.Plugins.AutoComplete {
 		}
 		
 		public override string OnPreEnterText(string text) {
+			if (!isEnabled) return text;
 			bool isSubmit = (text == "\n" || text == "\r" || text == "\t");
 			if (isSubmit && text == "\n") {
 				if (data.submitOnEnterMode == 2) {
@@ -249,10 +254,6 @@ namespace UIDE.Plugins.AutoComplete {
 			
 		}
 		
-		public override void OnChangedCursorPosition(Vector2 pos) {
-			//StartShowTooltip(editor.ScreenSpaceToCursorSpace(editor.windowMousePos),false);
-		}
-		
 		public void ShowBox() {
 			UpdateRect();
 			hasManualSelection = false;
@@ -296,6 +297,7 @@ namespace UIDE.Plugins.AutoComplete {
 		}
 		
 		public override void OnPreTextEditorGUI() {
+			if (!isEnabled) return;
 			if (visible) {
 				if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape) {
 					HideBox();
@@ -391,6 +393,8 @@ namespace UIDE.Plugins.AutoComplete {
 		
 		public override RCMenuItem[] OnGatherRCMenuItems() {
 			List<RCMenuItem> items = new List<RCMenuItem>();
+			if (!isEnabled) return items.ToArray();
+			
 			TooltipItem ttItem = editor.syntaxRule.GetTooltipItem(editor.ScreenSpaceToCursorSpace(editor.windowMousePos));
 			if (ttItem == null) return items.ToArray();
 			if (ttItem.item == null) return items.ToArray();
@@ -422,13 +426,16 @@ namespace UIDE.Plugins.AutoComplete {
 		}
 	
 		public override void OnPostEnterText(string text) {
+			if (!isEnabled) return;
 			UpdateAutoComplete(text,false);
 		}
 		
 		public override void OnPostBackspace() {
+			if (!isEnabled) return;
 			UpdateAutoComplete("",true);
 		}
 		public void UpdateAutoComplete(string text, bool isBackspace) {
+			if (!isEnabled) return;
 			if (text == "\n" || text == "\b" || (text == "" && !isBackspace)) {
 				return;
 			}
@@ -587,6 +594,7 @@ namespace UIDE.Plugins.AutoComplete {
 		}
 		
 		public override void OnTextEditorGUI(int windowID) {
+			if (!isEnabled) return;
 			//StartShowTooltip(editor.ScreenSpaceToCursorSpace(editor.windowMousePos));
 			GUI.color = new Color(1,1,1,1);
 			
@@ -733,7 +741,6 @@ namespace UIDE.Plugins.AutoComplete {
 				}
 			}
 			
-			//Derps(new Vector2(),3.0f,new float[5]);
 			GUI.Box(tooltipRect,content,tooltipStyle);
 			if (icon) {
 				GUI.DrawTexture(iconRect,icon,ScaleMode.ScaleToFit,true);
@@ -742,9 +749,6 @@ namespace UIDE.Plugins.AutoComplete {
 			GUI.EndGroup();
 		}
 		
-		//GameObject Derps(Vector2 fat, float poo, float[] goats) {
-		//	return new GameObject();
-		//}
 		
 		private void Draw() {
 			
@@ -857,13 +861,12 @@ namespace UIDE.Plugins.AutoComplete {
 			holdAutoCompleteUpdate = false;
 			
 			GUI.EndGroup();
-			
-			//UIDEGUI.InvisibleButton(rect);
 		}
 		
 		private bool StartShowTooltip(Vector2 pos, bool showMethodOverloads) {
+			if (!isEnabled) return true;
+			
 			if (useMultiThreading) {
-				//if (tooltipThread != null && tooltipThread.IsAlive) {
 				if (UIDEThreadPool.IsRegistered("AutoComplete_UpdateTooltip")) {
 					wantsTooltipUpdate = true;
 					wantsTooltipUpdateOverloads = showMethodOverloads;
@@ -871,12 +874,7 @@ namespace UIDE.Plugins.AutoComplete {
 				}
 				toolTipPos = pos;
 				wantsTooltipUpdate = false;
-				/*
-				tooltipThread = new Thread(() => StartShowTooltipActual(new System.Object[] {toolTipPos,showMethodOverloads}));
-				tooltipThread.IsBackground = true;
-				tooltipThread.Priority = System.Threading.ThreadPriority.BelowNormal;
-				tooltipThread.Start();
-				*/
+				
 				UIDEThreadPool.RegisterThread("AutoComplete_UpdateTooltip",StartShowTooltipActual,new System.Object[] {toolTipPos,showMethodOverloads});
 			}
 			else {
@@ -918,12 +916,11 @@ namespace UIDE.Plugins.AutoComplete {
 				cancelTooltip = false;
 			}
 			finally {
-				UIDEThreadPool.UnregisterThread("AutoComplete_UpdateTooltip");
+				//UIDEThreadPool.UnregisterThread("AutoComplete_UpdateTooltip");
 			}
 		}
 		
 		private void OnFinishUpdateAutoCompleteListActual() {
-			//Debug.Log(visible+" "+newVisibleState);
 			if (!visible && !newVisibleState) {
 				if (itemList.Count > 0) {
 					ShowBox();
@@ -935,26 +932,19 @@ namespace UIDE.Plugins.AutoComplete {
 				}
 			}
 			scroll.y = 0.0f;
-			//FocusOnItem(selectedIndex);
 			wantsFunishedUpdateAutoComplete = false;
 			editor.editorWindow.Repaint();
 		}
 		public bool TryStartUpdateAutoCompleteList(bool isChain) {
+			if (!isEnabled) return true;
 			if (useMultiThreading) {
-				//if (autoCompleteThread != null && autoCompleteThread.IsAlive) {
+				
 				if (UIDEThreadPool.IsRegistered("AutoComplete_UpdateAutoCompleteList")) {
 					wantsChainUpdate = isChain;
 					wantsAutoCompleteUpdate = true;
 					return false;
 				}
 				wantsAutoCompleteUpdate = false;
-				/*
-				autoCompleteThread = new Thread(() => UpdateAutoCompleteList(isChain));
-				autoCompleteThread.IsBackground = true;
-				autoCompleteThread.Priority = System.Threading.ThreadPriority.BelowNormal;
-		  		autoCompleteThread.Start();
-				*/
-				
 				UIDEThreadPool.RegisterThread("AutoComplete_UpdateAutoCompleteList",UpdateAutoCompleteList,isChain);
 			}
 			else {
@@ -968,9 +958,10 @@ namespace UIDE.Plugins.AutoComplete {
 			try {
 				bool isChain = (bool)context;
 				UpdateAutoCompleteListActual(isChain);
+				//Debug.Log(UIDEThreadPool.IsRegistered("AutoComplete_UpdateAutoCompleteList")+" "+isChain);
 			}
 			finally {
-				UIDEThreadPool.UnregisterThread("AutoComplete_UpdateAutoCompleteList");
+				//UIDEThreadPool.UnregisterThread("AutoComplete_UpdateAutoCompleteList");
 			}
 			
 		}

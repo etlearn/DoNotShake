@@ -1,3 +1,18 @@
+1.03 changes:
+Switched multithreaded things to use ThreadPool instead of regular threads.
+Added option to force generic auto complete for all files.
+Added option to disable auto complete.
+Fixed bug where scripts were sometimes reloaded when they shouldnt be.
+Delete key now works.
+Added hotkey to move to line start - Home or Alt+LeftArrow (can use shift to modify selection).
+Added hotkey to move to line end - End or Alt+RightArrow (can use shift to modify selection).
+Added hotkey to move to document start - Ctrl+Home (can use shift to modify selection).
+Added hotkey to move to document end - Ctrl+End (can use shift to modify selection).
+Added hotkey to duplicate line - Ctrl+D
+Added hotkey to delete line - Ctrl+Shift+D
+Added hotkey to comment selected lines - Ctrl+/
+Added hotkey to uncomment selected lines - Ctrl+Shift+/
+
 Windows Hotkeys:
 Save - Ctrl+S or Ctrl+Alt+S
 Undo - Ctrl+Z or Ctrl+Alt+Z
@@ -6,6 +21,14 @@ Select All - Ctrl+A
 Copy - Ctrl+C
 Cut - Ctrl+X
 Paste - Ctrl+V
+Move To Line Start - Home
+Move To Line End - End
+Move To Doc Start - Ctrl+Home
+Move To Doc End - Ctrl+End
+Duplicate Line - Ctrl+D
+Delete Line - Ctrl+Shift+D
+Comment Lines - Ctrl+/
+Uncomment Lines - Ctrl+Shift+/
 Search Unity Docs - F1
 Find Next - F3
 Find Previous - Shift+F3
@@ -18,6 +41,14 @@ Select All - Command+A
 Copy - Command+C
 Cut - Command+X
 Paste - Command+V
+Move To Line Start - Home
+Move To Line End - End
+Move To Doc Start - Command+Home
+Move To Doc End - Command+End
+Duplicate Line - Command+D
+Delete Line - Command+Shift+D
+Comment Lines - Command+/
+Uncomment Lines - Command+Shift+/
 Search Unity Docs - F1
 Find Next - F3
 Find Previous - Shift+F3
@@ -32,6 +63,8 @@ You can add custom fonts and pick them from the settings menu. Custom fonts go i
 
 Notes:
 In order to be able to use the standard Ctrl+S (Command+S on OSX) hotkey to save your current file, you must be unity loaded into a saved scene. You can also use the alternate save hotkey in the list above at any time.
+
+If you are experiencing slowness while editing and you are using OSX, try enabling "Force Generic Completion" in the General Settings menu, or disable completion completely. Unfortunately there seems to be a bug in the version of Mono that Unity uses that cripples multithreaded tasks on OSX.
 
 On rare occasions the Undo hotkey (Ctrl+Z, Command+Z on OSX) may stop working. Unfortunately I dont have much control over this because of the way Unity handles hotkeys. Closing and reopening UnIDE usually fixes this though.
 

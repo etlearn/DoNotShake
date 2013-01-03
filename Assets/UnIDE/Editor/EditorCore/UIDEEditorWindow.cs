@@ -29,6 +29,7 @@ public class UIDEEditorWindow:EditorWindow {
 	static public HashSet<Type> toggleableWindowTypes = new HashSet<Type>(new Type[] {typeof(SceneView),System.Type.GetType("UnityEditor.GameView,UnityEditor")});
 	public bool isLoaded = false;
 	
+	[SerializeField]
 	private UIDEEditor _editor;
 	public UIDEEditor editor {
 		get {
@@ -70,8 +71,9 @@ public class UIDEEditorWindow:EditorWindow {
 	public void OnEnable() {
 		EditorApplication.update -= EditorApplicationUpdate;
 		EditorApplication.update += EditorApplicationUpdate;
-		//Debug.Log("OnEnable");
+		//Debug.Log("OnEnable "+isLoaded);
 		if (isLoaded) return;
+		this.autoRepaintOnSceneChange = false;
 		this.wantsMouseMove = true;
 		this.Start();
 		isLoaded = true;
@@ -127,7 +129,9 @@ public class UIDEEditorWindow:EditorWindow {
 		}
 		this.wantsMouseMove = true;
 		if (editor == null) {
-			Start(true);
+			//Start(true);
+			Close();
+			return;
 		}
 		if (UIDEEditor.current != _editor) {
 			UIDEEditor.current = _editor;
@@ -151,7 +155,9 @@ public class UIDEEditorWindow:EditorWindow {
 		}
 		
 		if (editor == null) {
-			Start(true);
+			//Start(true);
+			Close();
+			return;
 		}
 		
 		if (UIDEEditor.current != _editor) {

@@ -18,17 +18,12 @@ using UIDE.CodeCompletion;
 namespace UIDE.SyntaxRules.Shared {
 	[System.Serializable]
 	public class SyntaxRuleCSharpUnityscript:SyntaxRule {
-		//private Thread parserThread;
-		//private Thread chainResolverThread;
-		//private Thread updateMultiLineFormattingThread;
+		private bool wantsMultiLineFormattingUpdate = false;
 		
 		private bool wantsParserUpdate = false;
 		private bool wantsChainResolverUpdate = false;
-		private bool wantsMultiLineFormattingUpdate = false;
 		
 		private bool useUnityscript = false;
-		
-		private bool useMultiThreadingParser = true;
 		
 		private ChainResolver chainResolver;
 		private bool isCreatingChainResolver = false;
@@ -44,7 +39,6 @@ namespace UIDE.SyntaxRules.Shared {
 		}
 		
 		public SyntaxRuleCSharpUnityscript() {
-			//isDefault = true;
 			fileTypes = new string[] {".cs",".js"};
 		}
 		
@@ -239,19 +233,18 @@ namespace UIDE.SyntaxRules.Shared {
 		
 		
 		private bool Reparse() {
-			if (useMultiThreadingParser) {
-				//if (parserThread != null && parserThread.IsAlive) {
+			if (editor.editorWindow.generalSettings.GetDisableCompletion()) {
+				return true;
+			}
+			if (editor.editorWindow.generalSettings.GetForceGenericAutoComplete()) {
+				return true;
+			}
+			if (useMultiThreading) {
 				if (UIDEThreadPool.IsRegistered("SRCSUS_Reparse")) {
 					wantsParserUpdate = true;
 					return false;
 				}
 				wantsParserUpdate = false;
-				/*
-				parserThread = new Thread(ReparseActual);
-				parserThread.IsBackground = true;
-				parserThread.Priority = System.Threading.ThreadPriority.BelowNormal;
-				parserThread.Start();
-				*/
 				UIDEThreadPool.RegisterThread("SRCSUS_Reparse",ReparseActual);
 			}
 			else {
@@ -272,7 +265,7 @@ namespace UIDE.SyntaxRules.Shared {
 				}
 			}
 			finally {
-				UIDEThreadPool.UnregisterThread("SRCSUS_Reparse");
+				//UIDEThreadPool.UnregisterThread("SRCSUS_Reparse");
 			}
 		}
 		
@@ -288,19 +281,18 @@ namespace UIDE.SyntaxRules.Shared {
 		}
 		
 		private bool UpdateChainResolver() {
-			if (useMultiThreadingParser) {
-				//if (chainResolverThread != null && chainResolverThread.IsAlive) {
+			if (editor.editorWindow.generalSettings.GetDisableCompletion()) {
+				return true;
+			}
+			if (editor.editorWindow.generalSettings.GetForceGenericAutoComplete()) {
+				return true;
+			}
+			if (useMultiThreading) {
 				if (UIDEThreadPool.IsRegistered("SRCSUS_UpdateChainResolver")) {
 					wantsChainResolverUpdate = true;
 					return false;
 				}
 				wantsChainResolverUpdate = false;
-				/*
-				chainResolverThread = new Thread(UpdateChainResolverActual);
-				chainResolverThread.IsBackground = true;
-				chainResolverThread.Priority = System.Threading.ThreadPriority.BelowNormal;
-				chainResolverThread.Start();
-				*/
 				UIDEThreadPool.RegisterThread("SRCSUS_UpdateChainResolver",UpdateChainResolverActual);
 			}
 			else {
@@ -320,7 +312,7 @@ namespace UIDE.SyntaxRules.Shared {
 				}
 			}
 			finally {
-				UIDEThreadPool.UnregisterThread("SRCSUS_UpdateChainResolver");
+				//UIDEThreadPool.UnregisterThread("SRCSUS_UpdateChainResolver");
 			}
 			isCreatingChainResolver = false;
 			
@@ -566,6 +558,10 @@ namespace UIDE.SyntaxRules.Shared {
 		}
 		
 		public override CompletionItem[] GetGlobalCompletionItems() {
+			if (editor.editorWindow.generalSettings.GetForceGenericAutoComplete()) {
+				return GetGenericCompletionItems();
+			}
+			
 			if (parserInterface.lastSourceFile == null) {
 				Reparse();
 			}
@@ -698,201 +694,20 @@ namespace UIDE.SyntaxRules.Shared {
 			return HasFileType(textEditor.extension);
 		}
 		
-		private List<UIDEElement> CreateStringAndCommentElements(UIDELine line, string str) {
-			List<UIDEElement> elements = new List<UIDEElement>();
-			UIDEElement currentElement = null;
-			int c = 0;
-			char previousPreviousChar = '\n';
-			char previousChar = '\n';
-			bool isComment = false;
-			bool isBlockComment = false;
-			bool isString = false;
-			bool isCharString = false;
-			while (c < str.Length) {
-				char currentChar = str[c];
-				//String
-				if (!isComment && !isBlockComment && !isCharString) {
-					
-					if (isString) {
-						if (currentChar == '"' && !(previousChar == '\\' && previousPreviousChar != '\\')) {
-							isString = false;
-							currentElement.rawText += currentChar.ToString();
-							currentElement = null;
-							previousPreviousChar = previousChar;
-							previousChar = currentChar;
-							c++;
-							continue;
-						}
-					}
-					else {
-						if (currentChar == '"' && previousChar != '\\') {
-							isString = true;
-							currentElement = line.CreateElement("", "String");
-							elements.Add(currentElement);
-						}
-					}
-					
-				}
-				//Char string
-				if (!isComment && !isBlockComment && !isString) {
-					
-					if (isCharString) {
-						if (currentChar == '\'' && !(previousChar == '\\' && previousPreviousChar != '\\')) {
-							isCharString = false;
-							currentElement.rawText += currentChar.ToString();
-							currentElement = null;
-							previousPreviousChar = previousChar;
-							previousChar = currentChar;
-							c++;
-							continue;
-						}
-					}
-					else {
-						if (currentChar == '\'' && previousChar != '\\') {
-							isCharString = true;
-							currentElement = line.CreateElement("", "String,CharString");
-							elements.Add(currentElement);
-						}
-					}
-					
-				}
-				if (c < str.Length-1) {
-					char nextChar = str[c+1];
-					//Block comments
-					if (!isComment && !isString && !isCharString) {
-						char cChar = '/';
-						char nChar = '*';
-						if (isBlockComment) {
-							cChar = '*';
-							nChar = '/';
-						}
-						
-						if (currentChar == cChar && nextChar == nChar) {
-							if (isBlockComment) {
-								isBlockComment = false;
-								currentElement.rawText += currentChar.ToString();
-								currentElement.rawText += nextChar.ToString();
-								currentElement.tokenDef = UIDETokenDefs.Get("Comment,Block,Contained");
-								currentElement = null;
-								previousPreviousChar = currentChar;
-								previousChar = nextChar;
-								c++;
-								c++;
-								continue;
-							}
-							else {
-								isBlockComment = true;
-								currentElement = line.CreateElement("", "Comment,Block,Start");
-								elements.Add(currentElement);
-								currentElement.rawText += currentChar.ToString();
-								currentElement.rawText += nextChar.ToString();
-								previousPreviousChar = currentChar;
-								previousChar = nextChar;
-								c++;
-								c++;
-								continue;
-							}
-						}
-						else {
-							if (!isBlockComment) {
-								if (currentChar == '*' && nextChar == '/') {
-									//a rogue */ so comment out everything up to it.
-									elements = new List<UIDEElement>();
-									currentElement = line.CreateElement("", "Comment,Block,End");
-									currentElement.rawText = line.rawText.Substring(0,c+2);
-									elements.Add(currentElement);
-									currentElement = null;
-									previousPreviousChar = currentChar;
-									previousChar = nextChar;
-									c++;
-									c++;
-									continue;
-								}
-							}
-							//else {
-							//	if (currentChar == '*' && nextChar == '/') {
-							//		isBlockComment = false;
-							//		currentElement.tokenDef = UIDETokenDefs.Get("Comment,Block,Contained");
-							//		currentElement = null;
-							//		previousPreviousChar = currentChar;
-							//		previousChar = nextChar;
-							//		c++;
-							//		c++;
-							//	}
-							//}
-						}
-						
-					}
-					
-					//Single line comments
-					if (!isString && !isBlockComment && !isCharString) {
-						if (currentChar == '/' && nextChar == '/') {
-							isComment = true;
-							currentElement = line.CreateElement("", "Comment,SingleLine");
-							elements.Add(currentElement);
-						}
-					}
-				}
-				if (currentElement == null) {
-					currentElement = line.CreateElement("", "");
-					elements.Add(currentElement);
-				}
-				
-				currentElement.rawText += currentChar.ToString();
-				
-				previousPreviousChar = previousChar;
-				previousChar = currentChar;
-				c++;
-			}
-			return elements;
-		}
-		
 		public override void OnRebuildLineElements(UIDELine line) {
-			//line.elements should contain a single element that contains all of its text and has canSplit = true
-			List<UIDEElement> elements = line.elements;
-			elements = CreateStringAndCommentElements(line,line.rawText);
-			
-			
-			elements = line.CreateSubElements(elements,@"#(.|$)+","PreProcess");
-			
-			elements = line.CreateSubElements(elements,"\t+","WhiteSpace,Tab");
-			elements = line.CreateSubElements(elements,@"\s+","WhiteSpace");
-			
-			elements = line.CreateSubElements(elements,@"(?<![0-9])[A-Za-z_]+(\w)*","Word");
-			//elements = line.CreateSubElements(elements,@"(?<![0-9])[A-Za-z_]+(\w)*","Word,Keyword");
-			//elements = line.CreateSubElements(elements,@"(?<![0-9])[A-Za-z_]+(\w)*","Word,Modifier");
-			//elements = line.CreateSubElements(elements,@"(?<![0-9])[A-Za-z_]+(\w)*","Word,PrimitiveType");
-			
-			elements = line.CreateSubElements(elements,@"(?<![A-Za-z_])([0-9]*\.?([0-9]+))((E|e)(\+|\-)([0-9]+))?(f|F)","Number,Float");
-			elements = line.CreateSubElements(elements,@"(?<![A-Za-z_])([0-9]*\.([0-9]+))((E|e)(\+|\-)([0-9]+))?(d|D)?","Number,Double");
-			elements = line.CreateSubElements(elements,@"(?<![A-Za-z_])([0-9]*)(d|D)","Number,Double");
-			elements = line.CreateSubElements(elements,@"(?<![A-Za-z_])([0-9]*)(l|L)","Number,Int64");
-			elements = line.CreateSubElements(elements,@"(?<![A-Za-z_])([0-9]*)","Number,Int32");
-			//elements = line.CreateSubElements(elements,@"(?<![A-Za-z_])([0-9]*\.?([0-9]+))((E|e)(\+|\-)([0-9]+))?(f|d|F|D)?","Number");
-			
-			elements = line.CreateSubElements(elements,@";","LineEnd");
-			elements = line.CreateSubElements(elements,@"\.","Dot");
-			
-			
-			line.elements = elements;
+			base.OnRebuildLineElements(line);
 			
 			wantsMultiLineFormattingUpdate = true;
 		}
 		
 		public bool UpdateMultilineFormatting() {
-			if (useMultiThreadingParser) {
-				//if (updateMultiLineFormattingThread != null && updateMultiLineFormattingThread.IsAlive) {
+			
+			if (useMultiThreading) {
 				if (UIDEThreadPool.IsRegistered("SRCSUS_UpdateMultilineFormatting")) {
 					wantsMultiLineFormattingUpdate = true;
 					return false;
 				}
 				wantsMultiLineFormattingUpdate = false;
-				/*
-				updateMultiLineFormattingThread = new Thread(UpdateMultilineFormattingActual);
-				updateMultiLineFormattingThread.IsBackground = true;
-				updateMultiLineFormattingThread.Priority = System.Threading.ThreadPriority.BelowNormal;
-				updateMultiLineFormattingThread.Start();
-				*/
 				UIDEThreadPool.RegisterThread("SRCSUS_UpdateMultilineFormatting",UpdateMultilineFormattingActual);
 				
 			}
@@ -905,70 +720,38 @@ namespace UIDE.SyntaxRules.Shared {
 		
 		private void UpdateMultilineFormattingActual(System.Object context) {
 			try {
-				bool isInBlockComment = false;
-				UIDETokenDef multiBlockTokenDef = UIDETokenDefs.Get("Comment,Block,Start");
-				//Debug.Log(multiBlockTokenDef.isBold);
-				for (int i = 0; i < editor.doc.lineCount; i++) {
-					if (i >= editor.doc.lineCount) break;
-					UIDELine line = editor.doc.RealLineAt(i);
-					if (line == null) continue;
-					lock (line) {
-						line.overrideTokenDef = null;
-						if (!isInBlockComment) {
-							if (line.elements.Count > 0) {
-								UIDEElement lastElement = line.GetLastNonWhitespaceElement(true);
-								if (lastElement != null && lastElement.tokenDef.rawTypes == "Comment,Block,Start") {
-									//Debug.Log(lastElement.line.rawText);
-									isInBlockComment = true;
-								}
-							}
+				UpdateMultilineFormattingGeneric();
+				
+				if (editor.editorWindow.generalSettings.GetUseCodeFolding() && parserInterface.lastSourceFile != null) {
+					lock (parserInterface) {
+						bool[] newLineIsFoldable = new bool[editor.doc.lineCount];
+						int[] newLineFoldingLength = new int[editor.doc.lineCount];
+						ReparseActual(null);
+						List<StatementBlock> blocks = GetStatementBlocksRecursive(parserInterface.lastSourceFile.statementBlock);
+						
+						foreach (StatementBlock block in blocks) {
+							int startLine = block.startLine;
+							int endLine = block.endLine;
+							if (startLine >= endLine) continue;
+							int foldingLength = endLine-startLine;
+							UIDELine line = editor.doc.RealLineAt(startLine);
+							if (line == null) continue;
+							newLineIsFoldable[line.index] = true;
+							newLineFoldingLength[line.index] = foldingLength;
 						}
-						else {
-							if (line.elements.Count > 0) {
-								UIDEElement firstElement = line.GetFirstNonWhitespaceElement(true);
-								if (firstElement != null && firstElement.tokenDef.rawTypes == "Comment,Block,End") {
-									isInBlockComment = false;
-								}
-							}
-							if (isInBlockComment) {
-								line.overrideTokenDef = multiBlockTokenDef;
-							}
+						
+						for (int i = 0; i < newLineIsFoldable.Length; i++) {
+							UIDELine line = editor.doc.RealLineAt(i);
+							if (line == null) continue;
+							line.isFoldable = newLineIsFoldable[i];
+							line.foldingLength = newLineFoldingLength[i];
 						}
 					}
 				}
 				
-				if (parserInterface.lastSourceFile == null) return;
-				
-				lock (parserInterface) {
-					bool[] newLineIsFoldable = new bool[editor.doc.lineCount];
-					int[] newLineFoldingLength = new int[editor.doc.lineCount];
-					ReparseActual(null);
-					List<StatementBlock> blocks = GetStatementBlocksRecursive(parserInterface.lastSourceFile.statementBlock);
-					
-					foreach (StatementBlock block in blocks) {
-						int startLine = block.startLine;
-						int endLine = block.endLine;
-						if (startLine >= endLine) continue;
-						int foldingLength = endLine-startLine;
-						UIDELine line = editor.doc.RealLineAt(startLine);
-						if (line == null) continue;
-						newLineIsFoldable[line.index] = true;
-						newLineFoldingLength[line.index] = foldingLength;
-						//line.isFoldable = true;
-						//line.foldingLength = foldingLength;
-						//Debug.Log(blocks.Count+" "+editor.renderedLineCount+" "+line.index);
-					}
-					
-					for (int i = 0; i < newLineIsFoldable.Length; i++) {
-						UIDELine line = editor.doc.RealLineAt(i);
-						if (line == null) continue;
-						line.isFoldable = newLineIsFoldable[i];
-						line.foldingLength = newLineFoldingLength[i];
-					}
-				}
 			}
 			finally {
-				UIDEThreadPool.UnregisterThread("SRCSUS_UpdateMultilineFormatting");
+				//UIDEThreadPool.UnregisterThread("SRCSUS_UpdateMultilineFormatting");
 			}
 			
 			//editor.editorWindow.Repaint();

@@ -52,6 +52,7 @@ public class Actor:MonoBehaviour {
 	public void PlayAnimation(string animName, float speed, float startTime, WrapMode wrapMode) {
 		if (!anim) return;
 		AnimationClip clip = anim.GetClip(animName);
+		if (!clip) return;
 		if (anim.clip != clip || !anim.isPlaying) {
 			anim.wrapMode = wrapMode;
 			anim.clip = clip;
