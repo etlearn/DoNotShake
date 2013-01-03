@@ -62,6 +62,7 @@
      <Compile Include="Assets\UnIDE\Editor\Themes\SlateDark\ThemeSlateDark.cs" />
      <None Include="Assets\SpriteEngine\Sprite_AlphaBlend.shader" />
      <None Include="Assets\UnIDE\Readme.txt" />
+     <None Include="Assets\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\Shaders\DoubleSidedSprite.shader" />
  <Reference Include="Assembly-UnityScript">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>

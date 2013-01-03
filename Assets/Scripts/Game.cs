@@ -9,6 +9,7 @@ public class Game:MonoBehaviour {
 	public string friendlyLevelName = "Level 1";
 	public int requiredImportantCount = 0;
 	public Vector3 gravity = new Vector3(0,-5,0);
+	public Transform endgameCamPosition;
 	
 	private PlayerController player;
 	
@@ -25,8 +26,11 @@ public class Game:MonoBehaviour {
 	[HideInInspector]
 	public bool gameIsEnded = false;
 	
+	public Camera cam;
+	
 	
 	void Awake() {
+		cam = Camera.main;
 		player = (PlayerController)FindObjectOfType(typeof(PlayerController));
 		Physics.gravity = gravity;
 	}
@@ -48,6 +52,15 @@ public class Game:MonoBehaviour {
 	
 	void OnGameEnd() {
 		gameIsEnded = true;
+		
+		bool isSuccess = false;
+		List<EnemyInfo> explodedImportantInfos = GetExplodedImportantEnemyInfos();
+		if (explodedImportantInfos.Count >= requiredImportantCount) {
+			isSuccess = true;
+		}
+		if (isSuccess) {
+			iTween.MoveTo(cam.gameObject,iTween.Hash("position", endgameCamPosition.position, "easeType", "easeInOutSine", "time", 1.0f, "delay", 0.0f));
+		}
 	}
 	
 	void OnGUI() {

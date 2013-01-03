@@ -48,6 +48,7 @@
      <Compile Include="Assets\OnQ Ultimate FX Pack 1 Cartoon\Scripts\PrefabLooping.js" />
      <None Include="Assets\SpriteEngine\Sprite_AlphaBlend.shader" />
      <None Include="Assets\UnIDE\Readme.txt" />
+     <None Include="Assets\iTween\ReadMe!\ReadMe!.txt" />
      <None Include="Assets\Shaders\DoubleSidedSprite.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

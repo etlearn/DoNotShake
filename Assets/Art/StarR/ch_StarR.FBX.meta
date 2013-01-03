@@ -47,7 +47,7 @@ ModelImporter:
       loop: 1
     - name: activate
       firstFrame: 241
-      lastFrame: 358
+      lastFrame: 362
       wrapMode: 8
       loop: 0
   meshes:
