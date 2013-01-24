@@ -25,12 +25,12 @@ Material:
         second: 5
       data:
         first:
-          name: _FresnelVontrast
-        second: 1
-      data:
-        first:
           name: _FresnelContrast
         second: 3
+      data:
+        first:
+          name: _FresnelVontrast
+        second: 1
     m_Colors:
       data:
         first:

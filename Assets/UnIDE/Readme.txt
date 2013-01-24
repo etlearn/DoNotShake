@@ -1,3 +1,18 @@
+1.04 changes:
+Made autocompletion/parsing on OSX much faster.
+Added drag and drop feature. You can drag files from the project window, or Explorer/Finder onto UnIDE to open them.
+Customizable file formats to show 
+Fixed bug that caused the duplicate line command to be done twice on OSX.
+Ctrl+/ now toggles comments. Ctrl+Shift+/ hotkey removed.
+Save confirmation when there are unsaved changes.
+Added hotkey to focus on the file search box in the project view - Ctrl+T.
+Added hotkey to close current file - Ctrl+W.
+Fixed Theme menu.
+You can now move the UnIDE directory anywhere in your Assets directory.
+Temp files are cleaned up when a file is closed.
+Missing files are removed from the list of opened files.
+
+
 1.03 changes:
 Switched multithreaded things to use ThreadPool instead of regular threads.
 Added option to force generic auto complete for all files.
@@ -27,8 +42,7 @@ Move To Doc Start - Ctrl+Home
 Move To Doc End - Ctrl+End
 Duplicate Line - Ctrl+D
 Delete Line - Ctrl+Shift+D
-Comment Lines - Ctrl+/
-Uncomment Lines - Ctrl+Shift+/
+Toggle Comment Lines - Ctrl+/
 Search Unity Docs - F1
 Find Next - F3
 Find Previous - Shift+F3
@@ -47,8 +61,7 @@ Move To Doc Start - Command+Home
 Move To Doc End - Command+End
 Duplicate Line - Command+D
 Delete Line - Command+Shift+D
-Comment Lines - Command+/
-Uncomment Lines - Command+Shift+/
+Toggle Comment Lines - Command+/
 Search Unity Docs - F1
 Find Next - F3
 Find Previous - Shift+F3

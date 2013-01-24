@@ -25,6 +25,12 @@ public class Exploder:MonoBehaviour {
 			ex = (Explosion)Instantiate(explosion,transform.position,transform.rotation);
 		}
 		if (destroyOnExplode) {
+			ExploderDetatcher[] detatchers = gameObject.GetComponentsInChildren<ExploderDetatcher>();
+			for (int i = 0; i < detatchers.Length; i++) {
+				if (detatchers[i].gameObject == gameObject) continue;
+				detatchers[i].transform.parent = null;
+				detatchers[i].gameObject.SendMessage("OnDetatched",SendMessageOptions.DontRequireReceiver);
+			}
 			if (detachChildren) {
 				transform.DetachChildren();
 			}

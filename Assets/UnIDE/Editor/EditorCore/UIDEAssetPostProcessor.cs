@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 
 public class UIDEAssetPostProcessor:AssetPostprocessor {
-    static void OnPostprocessAllAssets (string[] importedAssets,string[]  deletedAssets,string[] movedAssets,string[] movedFromAssetPaths) {
+    static void OnPostprocessAllAssets(string[] importedAssets,string[] deletedAssets,string[] movedAssets,string[] movedFromAssetPaths) {
 		OnChangedAsset(importedAssets);
 		OnChangedAsset(deletedAssets);
 		OnChangedAsset(movedAssets);

@@ -3,4 +3,5 @@ using System.Collections;
 
 public class EnemyInfo:MonoBehaviour {
 	public bool isImportant = false;
+	public StarRocketThrust winRocket;
 }

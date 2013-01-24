@@ -5,6 +5,10 @@ public class StarRocketThrust:MonoBehaviour {
 	public bool scaleForceByGravityMagnitude = true;
 	public bool waitForEnemyActivate = true;
 	public bool disableCollider = true;
+	public bool useAutoExplode = false;
+	public float autoExplodeDelayMin = 1.0f;
+	public float autoExplodeDelayMax = 1.5f;
+	
 	public float velocityRotateStrength = 1.0f;
 	public float cutoffTime = 0.0f;
 	public float force = 10.0f;
@@ -19,11 +23,24 @@ public class StarRocketThrust:MonoBehaviour {
 	private float enemyActivateTime = 0.0f;
 	private float activateTime = 0.0f;
 	private bool isActivated = false;
+	private bool hasAutoExploded = false;
+	private float autoExplodeDelay;
+	
+	private Exploder _exploder;
+	public Exploder exploder {
+		get {
+			if (!_exploder) {
+				_exploder = gameObject.GetComponent<Exploder>();
+			}
+			return _exploder;
+		}
+	}
 	
 	public void Start() {
 		if (!waitForEnemyActivate) {
 			OnEnemyActivate();
 		}
+		autoExplodeDelay = Random.Range(autoExplodeDelayMin,autoExplodeDelayMax);
 	}
 	
 	public void OnEnemyActivate() {
@@ -32,6 +49,17 @@ public class StarRocketThrust:MonoBehaviour {
 		
 		if (rigidbody == null) {
 			Debug.LogWarning("Tried to active StarRocketFlyAway without a rigidbody.");
+		}
+	}
+	
+	public void Update() {
+		if (isActivated) {
+			if (!hasAutoExploded && Time.timeSinceLevelLoad-activateTime >= autoExplodeDelay) {
+				if (exploder) {
+					exploder.Explode();
+				}
+				hasAutoExploded = true;
+			}
 		}
 	}
 	

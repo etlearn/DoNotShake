@@ -38,6 +38,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a68f7fc087ada24a87be9279fc88dd7, type: 1}
   m_Name: 
   isImportant: 1
+  winRocket: {fileID: 11400006, guid: 979d4da7b3792fc45bf9c8c9a13b42d4, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

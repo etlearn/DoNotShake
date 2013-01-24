@@ -4,12 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Game:MonoBehaviour {
+	public UIRoot endLevelUI;
+	public Camera cam;
 	public string worldName = "DefaultWorld";
 	public string nextLevelName = "Level1";
 	public string friendlyLevelName = "Level 1";
 	public int requiredImportantCount = 0;
 	public Vector3 gravity = new Vector3(0,-5,0);
 	public Transform endgameCamPosition;
+	
+	public Rect camBounds = new Rect(0,0,0,0);
 	
 	private PlayerController player;
 	
@@ -18,6 +22,8 @@ public class Game:MonoBehaviour {
 	public Dictionary<Enemy,int> enemyInfoDict = new Dictionary<Enemy,int>();
 	
 	[HideInInspector]
+	public RocketLaunchArea rocketLaunchArea;
+	[HideInInspector]
 	public List<Enemy> enemies = new List<Enemy>();
 	[HideInInspector]
 	public List<Explosion> explosions = new List<Explosion>();
@@ -25,18 +31,37 @@ public class Game:MonoBehaviour {
 	public bool gameHasStarted = false;
 	[HideInInspector]
 	public bool gameIsEnded = false;
+	[HideInInspector]
+	public bool showEndGameUI = false;
+	[HideInInspector]
+	public UIPanel endLevelUIMainPanel;
 	
-	public Camera cam;
 	
 	
 	void Awake() {
-		cam = Camera.main;
+		if (cam == null) {
+			cam = Camera.main;
+		}
 		player = (PlayerController)FindObjectOfType(typeof(PlayerController));
+		if (player == null) {
+			Debug.LogError("Player not found.");
+		}
+		
+		rocketLaunchArea = (RocketLaunchArea)FindObjectOfType(typeof(RocketLaunchArea));
+		if (rocketLaunchArea == null) {
+			Debug.LogError("RocketLaunchArea not found.");
+		}
+		
 		Physics.gravity = gravity;
 	}
 	
 	void Start() {
-		
+		endLevelUI.gameObject.SetActiveRecursively(true);
+		UIPanel[] allPanels = endLevelUI.GetComponentsInChildren<UIPanel>();
+		if (allPanels.Length > 0) {
+			endLevelUIMainPanel = allPanels[allPanels.Length-1];
+		}
+		endLevelUI.gameObject.SetActiveRecursively(false);
 	}
 	
 	void Update() {
@@ -46,11 +71,11 @@ public class Game:MonoBehaviour {
 			}
 		}
 		if (gameHasStarted && !gameIsEnded && !HasActiveEnemies() && !HasExplosions()) {
-			OnGameEnd();
+			StartCoroutine(OnGameEnd());
 		}
 	}
 	
-	void OnGameEnd() {
+	IEnumerator OnGameEnd() {
 		gameIsEnded = true;
 		
 		bool isSuccess = false;
@@ -60,15 +85,53 @@ public class Game:MonoBehaviour {
 		}
 		if (isSuccess) {
 			iTween.MoveTo(cam.gameObject,iTween.Hash("position", endgameCamPosition.position, "easeType", "easeInOutSine", "time", 1.0f, "delay", 0.0f));
+			
+			yield return new WaitForSeconds(1.0f+1.0f);
+			
+			for (int i = 0; i < explodedImportantInfos.Count; i++) {
+				ShootRocket(explodedImportantInfos[i]);
+				yield return new WaitForSeconds(1.0f);
+			}
 		}
+		
+		yield return new WaitForSeconds(1.0f);
+		
+		showEndGameUI = true;
+		endLevelUI.gameObject.SetActiveRecursively(true);
+		endLevelUIMainPanel.transform.localPosition = new Vector3(0,500,0);
+		iTween.MoveTo(endLevelUIMainPanel.gameObject,iTween.Hash("position", new Vector3(0,0,0), "islocal", true, "easeType", "easeInOutSine", "time", 1.0f, "delay", 0.0f));
+		endLevelUIMainPanel.transform.localScale = new Vector3(0.5f,1.0f,1.0f);
+		iTween.ScaleTo(endLevelUIMainPanel.gameObject,iTween.Hash("scale", new Vector3(1,1,1), "islocal", true, "easeType", "easeInOutSine", "time", 1.0f, "delay", 0.0f));
+		//endLevelUIMainPanel.transform.localEulerAngles = new Vector3(90.0f,0.0f,0.0f);
+		//iTween.RotateTo(endLevelUIMainPanel.gameObject,iTween.Hash("rotation", new Vector3(0,0,0), "islocal", true, "easeType", "easeInOutSine", "time", 1.0f, "delay", 0.0f));
+	}
+	
+	void ShootRocket(EnemyInfo info) {
+		Vector3 pos = rocketLaunchArea.transform.position;
+		pos.z = 0.0f;
+		float spawnPosOffset = Random.Range(-rocketLaunchArea.transform.lossyScale.x,rocketLaunchArea.transform.lossyScale.x)*0.5f;
+		pos.x += spawnPosOffset;
+		
+		Vector3 targetPos = cam.transform.position;
+		targetPos.z = 0.0f;
+		float targetOffset = Random.Range(-rocketLaunchArea.transform.lossyScale.x,rocketLaunchArea.transform.lossyScale.x)*0.5f;
+		//targetPos.x = pos.x;
+		targetPos.x += targetOffset*0.2f;
+		
+		Vector3 launchDir = (targetPos-pos).normalized;
+		
+		StarRocketThrust newRocket = (StarRocketThrust)Instantiate(info.winRocket,pos,Quaternion.identity);
+		newRocket.transform.up = launchDir;
+		
 	}
 	
 	void OnGUI() {
-		if (gameIsEnded) {
-			DrawGameEndGUI();
-		}
+		//if (gameIsEnded && showEndGameUI) {
+		//	DrawGameEndGUI();
+		//}
 	}
 	
+	/*
 	void DrawGameEndGUI() {
 		Rect mainRect = new Rect(0,0,400,300);
 		mainRect.x = Screen.width*0.5f-mainRect.width*0.5f;
@@ -113,11 +176,11 @@ public class Game:MonoBehaviour {
 		GUILayout.EndHorizontal();
 		
 		if (GUILayout.Button("Level Select")) {
-			Application.LoadLevel("LevelSelect");
+			GoToLevelSelect();
 		}
 		
 		if (GUILayout.Button("Retry")) {
-			Application.LoadLevel(Application.loadedLevel);
+			RetryLevel();
 		}
 		
 		if (GUILayout.Button("Next")) {
@@ -127,6 +190,15 @@ public class Game:MonoBehaviour {
 		GUILayout.FlexibleSpace();
 		
 		GUILayout.EndArea();
+	}
+	*/
+	
+	public void GoToLevelSelect() {
+		Application.LoadLevel("LevelSelect");
+	}
+	
+	public void RetryLevel() {
+		Application.LoadLevel(Application.loadedLevel);
 	}
 	
 	public void OnShakeDevice(float magnitude) {

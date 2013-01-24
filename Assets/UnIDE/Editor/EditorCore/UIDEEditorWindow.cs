@@ -25,8 +25,10 @@ using UnityEditor;
 public class UIDEEditorWindow:EditorWindow {
 	//private Vector2 mousePos;
 	//private Vector2 lastMousePos;
+	static public UIDEEditorWindow current;
 	static public EditorWindow lastFocusedWindow = null;
 	static public HashSet<Type> toggleableWindowTypes = new HashSet<Type>(new Type[] {typeof(SceneView),System.Type.GetType("UnityEditor.GameView,UnityEditor")});
+	
 	public bool isLoaded = false;
 	
 	[SerializeField]
@@ -69,6 +71,7 @@ public class UIDEEditorWindow:EditorWindow {
 	}
 	
 	public void OnEnable() {
+		UIDEEditorWindow.current = this;
 		EditorApplication.update -= EditorApplicationUpdate;
 		EditorApplication.update += EditorApplicationUpdate;
 		//Debug.Log("OnEnable "+isLoaded);
@@ -79,8 +82,14 @@ public class UIDEEditorWindow:EditorWindow {
 		isLoaded = true;
 	}
 	
-	public void Ondisable() {
+	public void OnDisable() {
 		EditorApplication.update -= EditorApplicationUpdate;
+	}
+	
+	public void OnDestroy() {
+		if (editor != null) {
+			editor.OnCloseWindow();
+		}
 	}
 	
 	public void Start() {
@@ -147,11 +156,19 @@ public class UIDEEditorWindow:EditorWindow {
 			editor.wantsRepaint = false;
 		}
 	}
-	
+	//private bool butt = true;
 	void OnGUI() {
+		//if (butt) {
+			//if (Event.current.type == EventType.Repaint) {
+				//butt = false;
+				//
+			//}
+			//GUIUtility.ExitGUI();
+			//return;
+		//}
 		if (Event.current.type == EventType.MouseMove && IsFocused()) {
-            Repaint();
-			return;
+			Repaint();
+			//return;
 		}
 		
 		if (editor == null) {

@@ -18,6 +18,7 @@ using UIDE.CodeCompletion;
 namespace UIDE.SyntaxRules.Shared {
 	[System.Serializable]
 	public class SyntaxRuleCSharpUnityscript:SyntaxRule {
+		public bool conservativeParsing = false;
 		private bool wantsMultiLineFormattingUpdate = false;
 		
 		private bool wantsParserUpdate = false;
@@ -63,44 +64,87 @@ namespace UIDE.SyntaxRules.Shared {
 		
 		public override void Start() {
 			useUnityscript = editor.extension == ".js";
+			
+			conservativeParsing = Application.platform == RuntimePlatform.OSXEditor;
+			//conservativeParsing |= true;
+			
+			chainResolver = null;
 			Reparse();
 			UpdateChainResolver();
 		}
 		
 		public override void OnFocus() {
+			chainResolver = null;
 			Reparse();
 			UpdateChainResolver();
 			wantsMultiLineFormattingUpdate = true;
 		}
 		
 		public override void OnSwitchToTab() {
+			chainResolver = null;
 			Reparse();
 			UpdateChainResolver();
 			wantsMultiLineFormattingUpdate = true;
 		}
 		
 		public override void OnRebuildLines(UIDEDoc doc) {
+			chainResolver = null;
 			base.OnRebuildLines(doc);
 			Reparse();
 			UpdateChainResolver();
 		}
 		
 		public override void OnPostBackspace() {
-			Reparse();
-			UpdateChainResolver();
+			if (!conservativeParsing) {
+				Reparse();
+				UpdateChainResolver();
+			}
 			wantsMultiLineFormattingUpdate = true;
 		}
 		
-		public override void OnChangedCursorPosition(Vector2 pos) {
+		public override void OnClickMoveCursor(Vector2 pos) {
 			UpdateChainResolver();
+		}
+		//public override void OnDragMoveCursor(Vector2 pos) {
+			//UpdateChainResolver();
+		//}
+		public override void OnArrowKeyMoveCursor(Vector2 pos) {
+			UIDELine line = editor.doc.RealLineAt((int)pos.y);
+			if (line == null) return;
+			UIDEElement element = line.GetElementAt((int)pos.x);
+			if (element == null) return;
+			if (element.tokenDef.isActualCode == true) {
+				char c = (char)0;
+				if (pos.x < line.rawText.Length) {
+					c = line.rawText[(int)pos.x];
+				}
+				if (c == ';' || c == '{' || c == '}') {
+					UpdateChainResolver();
+				}
+			}
+		}
+		public override void OnArrowKeyMoveCursorLine(Vector2 pos) {
+			UpdateChainResolver();
+		}
+		
+		public override void OnChangedCursorPosition(Vector2 pos) {
+			//UpdateChainResolver();
 		}
 		
 		public override void OnPostEnterText(string text) {
 			if (text == "\r" || text == "\n") {
 				OnNewLine();
 			}
-			Reparse();
-			UpdateChainResolver();
+			if (conservativeParsing) {
+				if (text == ";" || text == "\r" || text == "\n" || text == "{" || text == "}") {
+					Reparse();
+					UpdateChainResolver();
+				}
+			}
+			else {
+				Reparse();
+				UpdateChainResolver();
+			}
 			wantsMultiLineFormattingUpdate = true;
 		}
 		
@@ -255,7 +299,23 @@ namespace UIDE.SyntaxRules.Shared {
 		}
 		
 		private void ReparseActual(System.Object context) {
-			try {
+			
+			//System.AppDomainSetup setupInfo = new System.AppDomainSetup();
+			
+			//setupInfo.ApplicationBase = System.AppDomain.CurrentDomain.BaseDirectory;
+			
+			////setupInfo.ConfigurationFile = System.;
+			////setupInfo.PrivateBinPath = "bin;plugins;external";
+			
+			//System.AppDomain newDomain = System.AppDomain.CreateDomain("My New AppDomain", null, setupInfo);
+			//UIDE.CodeCompletion.ParserInterface pi = (UIDE.CodeCompletion.ParserInterface)newDomain.CreateInstance(Assembly.GetExecutingAssembly().FullName,"UIDE.CodeCompletion.ParserInterface").Unwrap();
+			//pi.Reparse(this,"    ","cs");
+			//ersdf
+			
+			//System.AppDomain.Unload(newDomain);
+			
+			//try {
+				//Debug.Log("Reparse");
 				string text = editor.doc.GetParsableText();
 				if (useUnityscript) {
 					parserInterface.Reparse(this,text,"us");
@@ -263,16 +323,18 @@ namespace UIDE.SyntaxRules.Shared {
 				else {
 					parserInterface.Reparse(this,text,"cs");
 				}
-			}
-			finally {
+			//}
+			//finally {
 				//UIDEThreadPool.UnregisterThread("SRCSUS_Reparse");
-			}
+			//}
 		}
 		
 		private void VerifyChainResolver() {
 			if (chainResolver == null) {
 				if (isCreatingChainResolver) {
-					while (isCreatingChainResolver) {};
+					while (isCreatingChainResolver) {
+						//Thread.Sleep(10);
+					}
 				}
 				else {
 					UpdateChainResolver();
@@ -303,17 +365,23 @@ namespace UIDE.SyntaxRules.Shared {
 		}
 		private void UpdateChainResolverActual(System.Object context) {
 			isCreatingChainResolver = true;
-			try {
-				try {
-					chainResolver = new ChainResolver(editor,editor.cursor.GetVectorPosition());
-				}
-				catch (System.Exception ex) {
-					Debug.LogError(ex.Message);
-				}
-			}
-			finally {
+			//try {
+				//try {
+					if (chainResolver != null && chainResolver.reflectionDB != null && !chainResolver.reflectionDB.needsToBeKilled) {
+						chainResolver.Refresh(editor,editor.cursor.GetVectorPosition());
+					}
+					else {
+						//Debug.Log("UpdateChainResolverActual");
+						chainResolver = new ChainResolver(editor,editor.cursor.GetVectorPosition());
+					}
+				//}
+				//catch (System.Exception ex) {
+				//	Debug.LogError(ex.Message);
+				//}
+			//}
+			//finally {
 				//UIDEThreadPool.UnregisterThread("SRCSUS_UpdateChainResolver");
-			}
+			//}
 			isCreatingChainResolver = false;
 			
 		}
@@ -330,7 +398,6 @@ namespace UIDE.SyntaxRules.Shared {
 			pos = editor.doc.IncrementPosition(pos,-1);
 			pos = editor.doc.GoToEndOfWhitespace(pos,-1);
 			
-			
 			//char nextChar = editor.doc.GetCharAt(pos);
 			if (editor.doc.GetCharAt(pos) == '>') {
 				ExpressionResolver.editor = editor;
@@ -345,7 +412,6 @@ namespace UIDE.SyntaxRules.Shared {
 				//GameObject go;
 				//go.GetComponent<Vector3>();
 			}
-			
 			Vector2 endWordPos = pos;
 			
 			pos = editor.doc.GoToEndOfWord(pos,-1);
@@ -451,6 +517,7 @@ namespace UIDE.SyntaxRules.Shared {
 				}
 			}
 			//GameObject go;
+			
 			//go.GetComponent<Vector3>();
 			if (isBeginGeneric) {
 				result.startPosition = pos;
@@ -535,7 +602,6 @@ namespace UIDE.SyntaxRules.Shared {
 					if (element.tokenDef.HasType("Dot")) {
 						expressionStartPos.x = elementPos-2;
 					}
-					
 				}
 			}
 			
@@ -719,11 +785,11 @@ namespace UIDE.SyntaxRules.Shared {
 		}
 		
 		private void UpdateMultilineFormattingActual(System.Object context) {
-			try {
+			//try {
 				UpdateMultilineFormattingGeneric();
 				
 				if (editor.editorWindow.generalSettings.GetUseCodeFolding() && parserInterface.lastSourceFile != null) {
-					lock (parserInterface) {
+					//lock (parserInterface) {
 						bool[] newLineIsFoldable = new bool[editor.doc.lineCount];
 						int[] newLineFoldingLength = new int[editor.doc.lineCount];
 						ReparseActual(null);
@@ -746,13 +812,13 @@ namespace UIDE.SyntaxRules.Shared {
 							line.isFoldable = newLineIsFoldable[i];
 							line.foldingLength = newLineFoldingLength[i];
 						}
-					}
+					//}
 				}
 				
-			}
-			finally {
+			//}
+			//finally {
 				//UIDEThreadPool.UnregisterThread("SRCSUS_UpdateMultilineFormatting");
-			}
+			//}
 			
 			//editor.editorWindow.Repaint();
 		}
