@@ -98,7 +98,6 @@ namespace UIDE.Plugins.ErrorTracking {
 		
 		public void RenderMessage(int windowID) {
 			if (currentLogEntry == null) return;
-			//GUI.color = new Color(1,1,1,1);
 			
 			UIDELogEntry entry = currentLogEntry;
 			if (currentFileLogEntry != null) {
@@ -122,7 +121,7 @@ namespace UIDE.Plugins.ErrorTracking {
 			
 			GUILayout.BeginHorizontal();
 			GUILayout.FlexibleSpace();
-			if (GUILayout.Button("I want to go to there.",GUILayout.ExpandWidth(false))) {
+			if (GUILayout.Button("Go there",GUILayout.ExpandWidth(false), GUILayout.MinWidth(100))) {
 				RequestGoToFileAndLine(entry.fileName,entry.line-1, entry.column-1);
 			}
 			GUILayout.FlexibleSpace();
@@ -174,7 +173,7 @@ namespace UIDE.Plugins.ErrorTracking {
 			size.x += GUI.skin.label.margin.left+GUI.skin.label.margin.right;
 			//size.x += GUI.skin.label.margin.left+GUI.skin.label.margin.right;
 			
-			string buttonText = "I want to go to there.";
+			string buttonText = "Go there";
 			size.y += GUI.skin.button.CalcHeight(new GUIContent(buttonText),size.x);
 			size.y += GUI.skin.button.margin.top+GUI.skin.button.margin.bottom;
 			
@@ -271,6 +270,7 @@ namespace UIDE.Plugins.ErrorTracking {
 			else {
 				type = consoleWindow.GetType();
 			}
+			if (consoleWindow == null) return;
 			MethodInfo onDisableMethod = type.GetMethod("OnDisable",BindingFlags.Instance|BindingFlags.NonPublic);
 			onDisableMethod.Invoke(consoleWindow,new object[] {});
 			MethodInfo onEnableMethod = type.GetMethod("OnEnable",BindingFlags.Instance|BindingFlags.NonPublic);

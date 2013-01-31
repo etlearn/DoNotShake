@@ -12,7 +12,6 @@ using UnityEditor;
 //TODO:
 
 //Editor Features:
-//Double click drag selects elements instead of characters.
 //File backup on save.
 
 //UI:
@@ -20,7 +19,6 @@ using UnityEditor;
 //Add more stuff to ProjectView.
 //	Recent files dropdown?
 //	Plugin icon tray at the bottom?
-//Make ProjectView have AutoCollapse option. (nice smooth animation!).
 
 public class UIDEEditorWindow:EditorWindow {
 	//private Vector2 mousePos;
@@ -29,6 +27,7 @@ public class UIDEEditorWindow:EditorWindow {
 	static public EditorWindow lastFocusedWindow = null;
 	static public HashSet<Type> toggleableWindowTypes = new HashSet<Type>(new Type[] {typeof(SceneView),System.Type.GetType("UnityEditor.GameView,UnityEditor")});
 	
+	public bool isPlaying = false;
 	public bool isLoaded = false;
 	
 	[SerializeField]
@@ -70,24 +69,50 @@ public class UIDEEditorWindow:EditorWindow {
 		}
 	}
 	
+	public void OnPlayStateChange() {
+		isPlaying = Application.isPlaying;
+	}
+	
+	public void OnProjectWindowItemGUI(string guid, Rect selectionRect) {
+		if (editor != null) {
+			editor.OnProjectWindowItemGUI(guid,selectionRect);
+		}
+	}
+	
 	public void OnEnable() {
 		UIDEEditorWindow.current = this;
+		
+		EditorApplication.projectWindowItemOnGUI -= OnProjectWindowItemGUI;
+		EditorApplication.projectWindowItemOnGUI += OnProjectWindowItemGUI;
+		
 		EditorApplication.update -= EditorApplicationUpdate;
 		EditorApplication.update += EditorApplicationUpdate;
-		//Debug.Log("OnEnable "+isLoaded);
+		
+		EditorApplication.playmodeStateChanged -= OnPlayStateChange;
+		EditorApplication.playmodeStateChanged += OnPlayStateChange;
+		
 		if (isLoaded) return;
 		this.autoRepaintOnSceneChange = false;
 		this.wantsMouseMove = true;
 		this.Start();
 		isLoaded = true;
+		
 	}
 	
 	public void OnDisable() {
+		EditorApplication.projectWindowItemOnGUI -= OnProjectWindowItemGUI;
 		EditorApplication.update -= EditorApplicationUpdate;
+		EditorApplication.playmodeStateChanged -= OnPlayStateChange;
 	}
 	
 	public void OnDestroy() {
-		if (editor != null) {
+		if (editor != null && !editor.isFocused) {
+			//Hack to check that the window was intentionally closed and not the effect of a min/maximization.
+			return;
+		}
+		
+		//more hax
+		if (editor != null && (!Application.isPlaying || !(Application.isPlaying && !isPlaying))) {
 			editor.OnCloseWindow();
 		}
 	}
@@ -116,10 +141,6 @@ public class UIDEEditorWindow:EditorWindow {
 		if (editor != null) {
 			editor.OnFocus();
 		}
-		//Rect p = position;
-		//p.width = 800;
-		//p.height = 500;
-		//position = p;
 	}
 	
 	void OnLostFocus() {
@@ -156,23 +177,13 @@ public class UIDEEditorWindow:EditorWindow {
 			editor.wantsRepaint = false;
 		}
 	}
-	//private bool butt = true;
+	
 	void OnGUI() {
-		//if (butt) {
-			//if (Event.current.type == EventType.Repaint) {
-				//butt = false;
-				//
-			//}
-			//GUIUtility.ExitGUI();
-			//return;
-		//}
 		if (Event.current.type == EventType.MouseMove && IsFocused()) {
 			Repaint();
-			//return;
 		}
 		
 		if (editor == null) {
-			//Start(true);
 			Close();
 			return;
 		}

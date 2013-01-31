@@ -892,7 +892,7 @@ namespace UIDE.Plugins.AutoComplete {
 			return true;
 		}
 		private void StartShowTooltipActual(System.Object context) {
-			//try {
+			try {
 				System.Object[] contextArray = (System.Object[])context;
 				Vector2 pos = (Vector2)contextArray[0];
 				bool showMethodOverloads = (bool)contextArray[1];
@@ -921,10 +921,10 @@ namespace UIDE.Plugins.AutoComplete {
 				}
 				editor.editorWindow.Repaint();
 				cancelTooltip = false;
-			//}
-			//finally {
+			}
+			finally {
 				//UIDEThreadPool.UnregisterThread("AutoComplete_UpdateTooltip");
-			//}
+			}
 		}
 		
 		private void OnFinishUpdateAutoCompleteListActual() {
@@ -962,14 +962,14 @@ namespace UIDE.Plugins.AutoComplete {
 		}
 		
 		void UpdateAutoCompleteList(System.Object context) {
-			//try {
+			try {
 				bool isChain = (bool)context;
 				UpdateAutoCompleteListActual(isChain);
 				//Debug.Log(UIDEThreadPool.IsRegistered("AutoComplete_UpdateAutoCompleteList")+" "+isChain);
-			//}
-			//finally {
+			}
+			finally {
 				//UIDEThreadPool.UnregisterThread("AutoComplete_UpdateAutoCompleteList");
-			//}
+			}
 			
 		}
 		void UpdateAutoCompleteListActual(bool isChain) {

@@ -1,9 +1,22 @@
+1.06 changes:
+Fixed all issues with window maximization while docked.
+Can double click script in project view to open files in UnIDE. Can be disabled in options.
+Changed tmp file names to asset GUID or hashed filename for external files. (Also fixes drag/drop files from external sources).
+
+1.05 changes:
+Fixed bug that caused some hotkeys to not work sometimes.
+Fixed bug that caused scripts to be reopened when docked and "Maximize On Play" is enabled.
+Fixed bug that caused parsing not to work while docked with the game view after pressing play, before recompiling.
+
 1.04 changes:
-Made autocompletion/parsing on OSX much faster.
+Made autocompletion/parsing on OSX much faster. This should no longer be an issue.
 Added drag and drop feature. You can drag files from the project window, or Explorer/Finder onto UnIDE to open them.
-Customizable file formats to show 
+Customizable file formats to include in the file list. (Currently must be edited through the inspector in "UnIDE/Editor/_TMP/SettingsGroupData/CGGeneral/DefaultData").
 Fixed bug that caused the duplicate line command to be done twice on OSX.
+Added Save, Save All, Undo, Redo icons to the project view.
 Ctrl+/ now toggles comments. Ctrl+Shift+/ hotkey removed.
+Shift click to expand selection.
+Alt+Left/Right arrows or Home/End now have an intermediate step. They will stop at the first non-whitespace character of a line.
 Save confirmation when there are unsaved changes.
 Added hotkey to focus on the file search box in the project view - Ctrl+T.
 Added hotkey to close current file - Ctrl+W.
@@ -36,13 +49,15 @@ Select All - Ctrl+A
 Copy - Ctrl+C
 Cut - Ctrl+X
 Paste - Ctrl+V
-Move To Line Start - Home
-Move To Line End - End
+Move To Line Start - Home or Alt+LeftArrow
+Move To Line End - End or Alt+RightArrow
 Move To Doc Start - Ctrl+Home
 Move To Doc End - Ctrl+End
 Duplicate Line - Ctrl+D
 Delete Line - Ctrl+Shift+D
 Toggle Comment Lines - Ctrl+/
+Focus on file search field - Ctrl+T
+Close current file Ctrl+W
 Search Unity Docs - F1
 Find Next - F3
 Find Previous - Shift+F3
@@ -55,13 +70,15 @@ Select All - Command+A
 Copy - Command+C
 Cut - Command+X
 Paste - Command+V
-Move To Line Start - Home
-Move To Line End - End
+Move To Line Start - Home or Alt+LeftArrow
+Move To Line End - End or Alt+RightArrow
 Move To Doc Start - Command+Home
 Move To Doc End - Command+End
 Duplicate Line - Command+D
 Delete Line - Command+Shift+D
 Toggle Comment Lines - Command+/
+Focus on file search field - Ctrl+T
+Close current file Ctrl+W
 Search Unity Docs - F1
 Find Next - F3
 Find Previous - Shift+F3

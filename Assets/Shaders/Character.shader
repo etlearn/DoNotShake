@@ -19,15 +19,18 @@ Shader "Custom/Character" {
 
 		struct Input {
 			float2 uv_MainTex;
-			float3 viewDir;
 			float3 worldNormal;
+			float3 viewDir;
 		};
 
 		void surf (Input IN, inout SurfaceOutput o) {
 			half4 c = tex2D (_MainTex, IN.uv_MainTex);
-			float facing = saturate(1.0-max(dot(normalize(IN.viewDir.xyz), normalize(IN.worldNormal)), 0.0));
+			
+			float facing = saturate(1.0-max(dot(normalize(IN.viewDir), normalize(IN.worldNormal)), 0.0));
+			
 			facing = pow(facing,_FresnelContrast);
 			float3 fresnelAdd = _FresnelTint.rgb*facing*_FresnelPower;
+			
 			fresnelAdd *= c.rgb;
 			o.Albedo = c.rgb+fresnelAdd;
 			o.Alpha = c.a;

@@ -93,63 +93,7 @@
      <Compile Include="Assets\UnIDE\Editor\Plugins\SyntaxRules\SyntaxRuleGeneric.cs" />
      <Compile Include="Assets\UnIDE\Editor\Plugins\SyntaxRules\Unityscript\USKeywords.cs" />
      <Compile Include="Assets\UnIDE\Editor\Plugins\UnityAPISearch\UnityAPISearch.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\APITokens.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\ClickBlocker.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\CompletionItem.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\ExpressionCompiler.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\ExpressionResolvers\CSharp\ExpressionResolver.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\ExpressionResolvers\ChainResolver.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\ExpressionResolvers\ReflectionDB.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\CSharp\Parser.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\CommonParser.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\AddOperator.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\BinaryOperator.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\Expression.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\NamedLiteral.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Expressions\UnaryOperator.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\ParserInterface.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Parsing.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\CodeCompletion\Parsing\Unityscript\USParser.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\RCMenu\RCMenu.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\RCMenu\RCMenuItem.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroup.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\General\SGGeneral.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\General\UIDESettingsGroupDataGeneral.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Help\SGHelp.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Plugins\PluginData.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Plugins\SGPlugins.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Plugins\UIDESettingsGroupDataPlugins.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Text\SGText.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Text\UIDESettingsGroupDataText.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Theme\SGTheme.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\Theme\UIDESettingsGroupDataTheme.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsGroups\UIDESettingsGroupData.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SettingsMenu\SettingsMenu.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\SyntaxRule.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\Theme.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEClipboardHelper.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDECursor.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEDoc.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEEditor.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEElement.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEFuzzySearch.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEGUI.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDELine.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDELogEntry.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEPlugin.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEScopeTree.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDESelection.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEThreadPool.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDETokenDef.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDETokenDefs.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEUndo.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEUndoManager.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\UIDEWindow.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\Windows\UIDEProjectView.cs" />
-     <Compile Include="Assets\UnIDE\Editor\Scripts\Windows\UIDETextEditor.cs" />
      <Compile Include="Assets\UnIDE\Editor\Themes\SlateDark\ThemeSlateDark.cs" />
-     <Compile Include="Assets\UnIDE\Editor\UIDEHashTable\UIDEHashItem.cs" />
-     <Compile Include="Assets\UnIDE\Editor\UIDEHashTable\UIDEHashTable.cs" />
      <None Include="Assets\NGUI\Resources\Shaders\Unlit - Depth Cutout.shader" />
      <None Include="Assets\NGUI\Examples\Models\Orc\Orc Skin.shader" />
      <None Include="Assets\NGUI\Examples\Atlases\Wooden\Arimo20.txt" />
@@ -185,6 +129,9 @@
      <None Include="Assets\NGUI\Examples\Models\Orc Armor\Orc Armor.shader" />
  <Reference Include="Assembly-UnityScript">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>
+ </Reference>
+ <Reference Include="UnIDE">
+ <HintPath>Assets\UnIDE\Editor\UnIDE.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
