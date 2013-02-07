@@ -39,6 +39,7 @@ public class Game:MonoBehaviour {
 	
 	
 	void Awake() {
+		endLevelUI = (UIRoot)Instantiate(endLevelUI);
 		if (cam == null) {
 			cam = Camera.main;
 		}
