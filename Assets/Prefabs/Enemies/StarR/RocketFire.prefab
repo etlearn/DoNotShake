@@ -8,6 +8,8 @@ GameObject:
   serializedVersion: 3
   m_Component:
   - 4: {fileID: 400000}
+  - 114: {fileID: 11400000}
+  - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: RocketFire
   m_TagString: Untagged
@@ -142,6 +144,28 @@ Transform:
   - {fileID: 400004}
   - {fileID: 400002}
   m_Father: {fileID: 400000}
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ee3dd12b36537e4882c49ad49f4b154, type: 1}
+  m_Name: 
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 201b3f2cfd3e29448a9bda9cc0b54da3, type: 1}
+  m_Name: 
+  destroyObject: 1
+  destroyDelay: 1
 --- !u!198 &19800000
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -4169,7 +4193,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: -10
+  m_SortingFudge: 0
   m_SortMode: 1
   m_Mesh: {fileID: 0}
 --- !u!199 &19900002
@@ -4195,7 +4219,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: -20
+  m_SortingFudge: -.100000001
   m_SortMode: 1
   m_Mesh: {fileID: 0}
 --- !u!199 &19900004
@@ -4221,7 +4245,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: -4
-  m_SortingFudge: 300
+  m_SortingFudge: -.100000001
   m_SortMode: 2
   m_Mesh: {fileID: 0}
 --- !u!199 &19900006
@@ -4247,7 +4271,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: -50
+  m_SortingFudge: -.100000001
   m_SortMode: 0
   m_Mesh: {fileID: 0}
 --- !u!1001 &100100000

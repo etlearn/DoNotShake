@@ -1,4 +1,4 @@
-﻿//----------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
 // Copyright © 2011-2012 Tasharen Entertainment
 //----------------------------------------------
@@ -61,7 +61,7 @@ public class UIButtonMessage : MonoBehaviour
 	{
 		if (string.IsNullOrEmpty(functionName)) return;
 		if (target == null) target = gameObject;
-
+		
 		if (includeChildren)
 		{
 			Transform[] transforms = target.GetComponentsInChildren<Transform>();

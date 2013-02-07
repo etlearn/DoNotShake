@@ -9,6 +9,8 @@ public class StarRocketThrust:MonoBehaviour {
 	public float autoExplodeDelayMin = 1.0f;
 	public float autoExplodeDelayMax = 1.5f;
 	
+	public bool usePhysicsConstraints = true;
+	
 	public float velocityRotateStrength = 1.0f;
 	public float cutoffTime = 0.0f;
 	public float force = 10.0f;
@@ -80,7 +82,10 @@ public class StarRocketThrust:MonoBehaviour {
 				if (disableCollider && collider) {
 					collider.enabled = false;
 				}
-				rigidbody.constraints &= ~RigidbodyConstraints.FreezeRotationZ;
+				
+				if (usePhysicsConstraints) {
+					rigidbody.constraints &= ~RigidbodyConstraints.FreezeRotationZ;
+				}
 				
 				float xTorqueScaler = Random.Range(-1.0f,1.0f);
 				float yTorqueScaler = Random.Range(-1.0f,1.0f);

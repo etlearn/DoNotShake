@@ -35,6 +35,7 @@ Shader "SpriteEngine/Sprite_AlphaBlend" {
 			outColor *= _Brightness;
 			
 			o.Emission = outColor;
+			//o.Albedo = outColor;
 			o.Alpha = c.a*_Color.a*IN.color.a;
 		}
 		ENDCG

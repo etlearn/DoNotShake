@@ -5161,7 +5161,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: -50
+  m_SortingFudge: 1
   m_SortMode: 0
   m_Mesh: {fileID: 0}
 --- !u!199 &19900002
@@ -5187,7 +5187,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: -45
+  m_SortingFudge: -.100000001
   m_SortMode: 0
   m_Mesh: {fileID: 0}
 --- !u!199 &19900004
@@ -5213,7 +5213,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
-  m_SortingFudge: -100
+  m_SortingFudge: -1
   m_SortMode: 0
   m_Mesh: {fileID: 0}
 --- !u!199 &19900006
@@ -5239,7 +5239,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: -4
-  m_SortingFudge: -25
+  m_SortingFudge: -.100000001
   m_SortMode: 2
   m_Mesh: {fileID: 0}
 --- !u!199 &19900008
@@ -5265,7 +5265,7 @@ ParticleSystemRenderer:
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: -4
-  m_SortingFudge: -25
+  m_SortingFudge: -.100000001
   m_SortMode: 2
   m_Mesh: {fileID: 0}
 --- !u!1001 &100100000

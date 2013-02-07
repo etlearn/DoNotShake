@@ -107,16 +107,11 @@ public class Game:MonoBehaviour {
 	}
 	
 	void ShootRocket(EnemyInfo info) {
-		Vector3 pos = rocketLaunchArea.transform.position;
-		pos.z = 0.0f;
-		float spawnPosOffset = Random.Range(-rocketLaunchArea.transform.lossyScale.x,rocketLaunchArea.transform.lossyScale.x)*0.5f;
-		pos.x += spawnPosOffset;
+		Vector3 pos = rocketLaunchArea.GetRandomPosition();
 		
 		Vector3 targetPos = cam.transform.position;
 		targetPos.z = 0.0f;
-		float targetOffset = Random.Range(-rocketLaunchArea.transform.lossyScale.x,rocketLaunchArea.transform.lossyScale.x)*0.5f;
-		//targetPos.x = pos.x;
-		targetPos.x += targetOffset*0.2f;
+		targetPos += rocketLaunchArea.GetRandomOffset()*0.2f;
 		
 		Vector3 launchDir = (targetPos-pos).normalized;
 		

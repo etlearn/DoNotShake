@@ -58,27 +58,30 @@ public class Character:MonoBehaviour {
 				//rayOrigin += up*capsuleCollider.height;
 				//Vector3 rayOrigin = new Vector3(hits[i].point.x,characterPos.y-capsuleCollider.height,hits[i].point.z);
 				
+				
 				Ray ray = new Ray(rayOrigin,up);
 				
 				if (capsuleCollider.Raycast(ray,out hit,capsuleCollider.height*8.0f)) {
 					float hitDif = transform.InverseTransformPoint(hit.point).y-transform.InverseTransformPoint(hits[i].point).y;
 					float bestHitDif = transform.InverseTransformPoint(bestRaycastHit.point).y-transform.InverseTransformPoint(bestSpherecastHit.point).y;
+					//Debug.Log(i+" "+bestHitDif);
 					
 					if (i == 0 || hitDif < bestHitDif) {
 						bestRaycastHit = hit;
 						bestSpherecastHit = hits[i];
 						//bestRay = ray;
 					}
-					
 				}
 			}
+			
 			
 			isGrounded = true;
 			groundPos = bestSpherecastHit.point;
 			groundNormal = bestSpherecastHit.normal;
 			footNormal = bestRaycastHit.normal;
 			
-			Vector3 localVelocity = transform.InverseTransformPoint(rigidbody.velocity);
+			Vector3 localVelocity = transform.InverseTransformDirection(rigidbody.velocity);
+			
 			if (localVelocity.y <= 0.0f) {
 				float charHitDif = transform.InverseTransformPoint(characterPos).y-transform.InverseTransformPoint(bestRaycastHit.point).y;
 				//float hitDif = transform.InverseTransformPoint(bestSpherecastHit.point).y-transform.InverseTransformPoint(bestRaycastHit.point).y;
@@ -96,6 +99,7 @@ public class Character:MonoBehaviour {
 				newPos += up*(footOffset*footAnchorRatio);
 				
 				transform.position = newPos;
+				
 			}
 			
 			Debug.DrawLine(bestSpherecastHit.point,bestRaycastHit.point,new Color(0,0,1,1));
